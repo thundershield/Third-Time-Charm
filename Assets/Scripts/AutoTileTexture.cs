@@ -4,91 +4,161 @@ using UnityEngine;
 
 public class AutoTileTexture
 {
-    public Texture2D Texture { get; private set; }
+    // A hash-able way to store the layout of a tile's texture, used to check if a texture is unique.
+    private struct Layout : IEquatable<Layout>
+    {
+        private int x0;
+        private int y0;
+        
+        private int x1;
+        private int y1;
+        
+        private int x2;
+        private int y2;
+        
+        private int x3;
+        private int y3;
 
-    private bool[] nearbyTiles = new bool[8];
-    private Dictionary<int, Sprite> maskOffset = new();
+        public bool Equals(Layout other)
+        {
+            return x0 == other.x0 && y0 == other.y0 && x1 == other.x1 && y1 == other.y1 && x2 == other.x2 &&
+                   y2 == other.y2 && x3 == other.x3 && y3 == other.y3;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Layout other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(x0, y0, x1, y1, x2, y2, x3, y3);
+        }
+
+        public void SetTexPos(int i, int x, int y)
+        {
+            switch (i)
+            {
+                case 0:
+                    x0 = x;
+                    y0 = y;
+                    break;
+                case 1:
+                    x1 = x;
+                    y1 = y;
+                    break;
+                case 2:
+                    x2 = x;
+                    y2 = y;
+                    break;
+                case 3:
+                    x3 = x;
+                    y3 = y;
+                    break;
+            }
+        }
+    }
+    
+    private readonly Dictionary<int, Sprite> maskSprites = new();
+    private readonly Dictionary<Layout, Sprite> layoutSprites = new();
+    private int tileTexCount;
+
+    private readonly bool[] nearbyTiles = new bool[8];
 
     public AutoTileTexture(Texture seedTexture, int tileSize)
     {
         GenerateTexture(seedTexture, tileSize);
     }
 
-    // Get offset of the tile's texture based on which neighbor tiles are not the same as this one.
-    public Sprite GetSprite(bool tl, bool tc, bool tr, bool cl, bool cr, bool bl, bool bc, bool br)
-    {
-        int mask = 0;
-        // TODO: Maybe don't do a bitshift every time, these could be constants.
-        if (tl) mask |= 1 << 0;
-        if (tc) mask |= 1 << 1;
-        if (tr) mask |= 1 << 2;
-        if (cl) mask |= 1 << 3;
-        if (cr) mask |= 1 << 4;
-        if (bl) mask |= 1 << 5;
-        if (bc) mask |= 1 << 6;
-        if (br) mask |= 1 << 7;
+    private Texture2D texture;
 
-        return maskOffset[mask];
+    // Get offset of the tile's texture based on which neighbor tiles are not the same as this one.
+    public Sprite GetSprite(bool[] neighbors)
+    {
+        var mask = 0;
+        for (var i = 0; i < neighbors.Length; i++)
+        {
+            if (!neighbors[i]) continue;
+            mask |= 1 << i;
+        }
+
+        return maskSprites[mask];
     }
 
     private void GenerateTexture(Texture seedTexture, int tileSize)
     {
+        // 256 combinations of neighbors are possible, but only 47 are unique.
+        const int tileCount = 47;
+        
         int halfTileSize = tileSize / 2;
-        const int tileCount = 257; // TODO: Determine the actual size, probably around 40.
         int minWidth = tileCount * tileSize;
-        int texWidth = 1;
+        var texWidth = 1;
 
-        while (texWidth < minWidth)
-        {
-            texWidth *= 2;
-        }
+        while (texWidth < minWidth) texWidth *= 2;
 
-        Texture = new Texture2D(texWidth, tileSize, TextureFormat.ARGB32, false)
+        texture = new Texture2D(texWidth, tileSize, TextureFormat.ARGB32, false)
         {
             filterMode = FilterMode.Point
         };
-        int tileIndex = 0;
 
         // Loop over a bitmask representing all possible combinations of neighboring tiles.
-        for (int mask = 0; mask <= 255; mask++)
+        for (var mask = 0; mask <= 255; mask++)
         {
-            int tileTexX = tileIndex * tileSize;
+            UpdateNeighbors(mask);
+            CreateSubTileTextureLayout(mask, tileSize, halfTileSize, seedTexture);
+        }
+    }
 
-            // Update neighbors:
-            for (int i = 0; i < 8; i++)
+    private void UpdateNeighbors(int mask)
+    {
+        for (var i = 0; i < 8; i++) nearbyTiles[i] = (mask & (1 << i)) != 0;
+    }
+    
+    private void CreateSubTileTextureLayout(int mask, int tileSize, int halfTileSize, Texture seedTexture)
+    {
+        var layout = new Layout();
+        int tileTexX = tileTexCount * tileSize;
+
+        for (var i = 0; i < 4; i++)
+        {
+            var texX = 1;
+            var texY = 1;
+
+            int subTileX = i % 2;
+            int subTileY = i / 2;
+
+            int offsetX = subTileX * 2 - 1;
+            int offsetY = subTileY * 2 - 1;
+
+            if (GetNearby(offsetX, 0)) texX += offsetX;
+            if (GetNearby(0, offsetY)) texY += offsetY;
+            if (texX == 1 && texY == 1 && GetNearby(offsetX, offsetY))
             {
-                nearbyTiles[i] = (mask & (1 << i)) != 0;
+                texX = 4 - subTileX;
+                texY = 1 - subTileY;
             }
 
-            // Loop over subtiles:
-            for (int i = 0; i < 4; i++)
-            {
-                int texX = 1;
-                int texY = 1;
+            int subTileTexX = texX * halfTileSize;
+            int subTileTexY = seedTexture.height - texY * halfTileSize - halfTileSize;
 
-                int subTileX = i % 2;
-                int subTileY = i / 2;
+            Graphics.CopyTexture(seedTexture, 0, 0, subTileTexX, subTileTexY, halfTileSize, halfTileSize, texture,
+                0, 0, tileTexX + subTileX * halfTileSize, texture.height - subTileY * halfTileSize - halfTileSize);
+            
+            layout.SetTexPos(i, texX, texY);
+        }
 
-                int offsetX = subTileX * 2 - 1;
-                int offsetY = subTileY * 2 - 1;
-
-                if (GetNearby(offsetX, 0)) texX += offsetX;
-                if (GetNearby(0, offsetY)) texY += offsetY;
-                if (texX == 1 && texY == 1 && GetNearby(offsetX, offsetY))
-                {
-                    texX = 4 - subTileX;
-                    texY = 1 - subTileY;
-                }
-
-                int subTileTexX = texX * halfTileSize;
-                int subTileTexY = seedTexture.height - texY * halfTileSize - halfTileSize;
-
-                Graphics.CopyTexture(seedTexture, 0, 0, subTileTexX, subTileTexY, halfTileSize, halfTileSize, Texture, 0, 0, tileTexX + subTileX * halfTileSize, Texture.height - subTileY * halfTileSize - halfTileSize);
-            }
-
-            maskOffset.Add(mask, Sprite.Create(Texture, new Rect(tileTexX, 0, tileSize, tileSize), new Vector2(0.5f, 0.5f), tileSize, 0));
-
-            tileIndex++;
+        // Reuse existing sprites if this new one is not unique.
+        if (layoutSprites.TryGetValue(layout, out Sprite existingSprite))
+        {
+            maskSprites.Add(mask, existingSprite);
+        }
+        else
+        {
+            var sprite = Sprite.Create(texture, new Rect(tileTexX, 0, tileSize, tileSize), new Vector2(0.5f, 0.5f),
+                tileSize, 0);
+            layoutSprites.Add(layout, sprite);
+            maskSprites.Add(mask, sprite);
+            tileTexCount++;
         }
     }
 

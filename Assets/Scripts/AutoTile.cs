@@ -9,7 +9,8 @@ public class AutoTile : Tile
 {
     [SerializeField] private Texture seedTexture;
     [SerializeField] private int tileSize;
-    public AutoTileTexture texture;
+    private AutoTileTexture texture;
+    private readonly bool[] neighborBuffer = new bool[8];
 
     public void OnEnable()
     {
@@ -30,21 +31,24 @@ public class AutoTile : Tile
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
-        bool tl = !HasSelf(tilemap, position + new Vector3Int(-1, 1, 0));
-        bool tc = !HasSelf(tilemap, position + new Vector3Int(0, 1, 0));
-        bool tr = !HasSelf(tilemap, position + new Vector3Int(1, 1, 0));
-        bool cl = !HasSelf(tilemap, position + new Vector3Int(-1, 0, 0));
-        bool cr = !HasSelf(tilemap, position + new Vector3Int(1, 0, 0));
-        bool bl = !HasSelf(tilemap, position + new Vector3Int(-1, -1, 0));
-        bool bc = !HasSelf(tilemap, position + new Vector3Int(0, -1, 0));
-        bool br = !HasSelf(tilemap, position + new Vector3Int(1, -1, 0));
+        var i = 0;
+        for (var y = 1; y >= -1; y--)
+        {
+            for (int x = -1; x <= 1; x++)
+            {
+                if (y == 0 && x == 0) continue;
+                
+                neighborBuffer[i] = !HasSelf(tilemap, position + new Vector3Int(x, y, 0));
+                i++;
+            }
+        }
 
-        tileData.sprite = texture.GetSprite(tl, tc, tr, cl, cr, bl, bc, br);
+        tileData.sprite = texture.GetSprite(neighborBuffer);
         tileData.color = Color.white;
         tileData.colliderType = ColliderType.None;
     }
 
-    private bool HasAutoTile(ITilemap tilemap, Vector3Int position)
+    private static bool HasAutoTile(ITilemap tilemap, Vector3Int position)
     {
         return tilemap.GetTile(position) is AutoTile;
     }
@@ -60,7 +64,7 @@ public class AutoTile : Tile
     {
         string path = EditorUtility.SaveFilePanelInProject("Save AutoTile", "New AutoTile", "Asset", "Save AutoTile", "Assets");
         if (path == "") return;
-        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<AutoTile>(), path);
+        AssetDatabase.CreateAsset(CreateInstance<AutoTile>(), path);
     }
 #endif
 }

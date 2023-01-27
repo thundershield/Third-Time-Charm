@@ -1,28 +1,37 @@
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = System.Random;
 
 [RequireComponent(typeof(Tilemap))]
 public class Map : MonoBehaviour
 {
-    [SerializeField] private AutoTile testTile;
-    private Tilemap tilemap;
+    [SerializeField] private AutoTile[] tiles;
+    private Tilemap _tilemap;
+    private IWorldGenerator _worldGenerator;
 
     private void Start()
     {
-        tilemap = GetComponent<Tilemap>();
-        for (var x = 0; x < 3; x++)
-        {
-            for (var y = 0; y < 3; y++)
-            {
-                if (x == 1 && y == 1) continue;
-
-                tilemap.SetTile(new Vector3Int(x, y, 0), testTile);
-            }
-        }
+        _worldGenerator = new WorldGenerator();
+        _tilemap = GetComponent<Tilemap>();
+        
+        _worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
     }
 
-    private void Update()
+    public void SetTile(TileType tile, int x, int y)
     {
-        tilemap.SetTile(new Vector3Int(1, 1, 0), testTile);
+        var tileIndex = (int)tile;
+        _tilemap.SetTile(new Vector3Int(x, y, 0), tiles[tileIndex]);
+    }
+
+    public void SetRect(TileType tile, int x, int y, int width, int height)
+    {
+        for (var xi = 0; xi < width; xi++)
+        {
+            for (var yi = 0; yi < height; yi++)
+            {
+                SetTile(tile, x + xi, y + yi);
+            }
+        }
     }
 }

@@ -7,22 +7,22 @@ public class AutoTileTexture
     // A hash-able way to store the layout of a tile's texture, used to check if a texture is unique.
     private struct Layout : IEquatable<Layout>
     {
-        private int x0;
-        private int y0;
+        private int _x0;
+        private int _y0;
         
-        private int x1;
-        private int y1;
+        private int _x1;
+        private int _y1;
         
-        private int x2;
-        private int y2;
+        private int _x2;
+        private int _y2;
         
-        private int x3;
-        private int y3;
+        private int _x3;
+        private int _y3;
 
         public bool Equals(Layout other)
         {
-            return x0 == other.x0 && y0 == other.y0 && x1 == other.x1 && y1 == other.y1 && x2 == other.x2 &&
-                   y2 == other.y2 && x3 == other.x3 && y3 == other.y3;
+            return _x0 == other._x0 && _y0 == other._y0 && _x1 == other._x1 && _y1 == other._y1 && _x2 == other._x2 &&
+                   _y2 == other._y2 && _x3 == other._x3 && _y3 == other._y3;
         }
 
         public override bool Equals(object obj)
@@ -32,7 +32,7 @@ public class AutoTileTexture
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(x0, y0, x1, y1, x2, y2, x3, y3);
+            return HashCode.Combine(_x0, _y0, _x1, _y1, _x2, _y2, _x3, _y3);
         }
 
         public void SetTexPos(int i, int x, int y)
@@ -40,37 +40,37 @@ public class AutoTileTexture
             switch (i)
             {
                 case 0:
-                    x0 = x;
-                    y0 = y;
+                    _x0 = x;
+                    _y0 = y;
                     break;
                 case 1:
-                    x1 = x;
-                    y1 = y;
+                    _x1 = x;
+                    _y1 = y;
                     break;
                 case 2:
-                    x2 = x;
-                    y2 = y;
+                    _x2 = x;
+                    _y2 = y;
                     break;
                 case 3:
-                    x3 = x;
-                    y3 = y;
+                    _x3 = x;
+                    _y3 = y;
                     break;
             }
         }
     }
     
-    private readonly Dictionary<int, Sprite> maskSprites = new();
-    private readonly Dictionary<Layout, Sprite> layoutSprites = new();
-    private int tileTexCount;
+    private readonly Dictionary<int, Sprite> _maskSprites = new();
+    private readonly Dictionary<Layout, Sprite> _layoutSprites = new();
+    private int _tileTexCount;
 
-    private readonly bool[] nearbyTiles = new bool[8];
+    private readonly bool[] _nearbyTiles = new bool[8];
 
     public AutoTileTexture(Texture seedTexture, int tileSize)
     {
         GenerateTexture(seedTexture, tileSize);
     }
 
-    private Texture2D texture;
+    private Texture2D _texture;
 
     // Get offset of the tile's texture based on which neighbor tiles are not the same as this one.
     public Sprite GetSprite(bool[] neighbors)
@@ -82,7 +82,7 @@ public class AutoTileTexture
             mask |= 1 << i;
         }
 
-        return maskSprites[mask];
+        return _maskSprites[mask];
     }
 
     private void GenerateTexture(Texture seedTexture, int tileSize)
@@ -90,13 +90,13 @@ public class AutoTileTexture
         // 256 combinations of neighbors are possible, but only 47 are unique.
         const int tileCount = 47;
         
-        int halfTileSize = tileSize / 2;
-        int minWidth = tileCount * tileSize;
+        var halfTileSize = tileSize / 2;
+        var minWidth = tileCount * tileSize;
         var texWidth = 1;
 
         while (texWidth < minWidth) texWidth *= 2;
 
-        texture = new Texture2D(texWidth, tileSize, TextureFormat.ARGB32, false)
+        _texture = new Texture2D(texWidth, tileSize, TextureFormat.ARGB32, false)
         {
             filterMode = FilterMode.Point
         };
@@ -111,24 +111,24 @@ public class AutoTileTexture
 
     private void UpdateNeighbors(int mask)
     {
-        for (var i = 0; i < 8; i++) nearbyTiles[i] = (mask & (1 << i)) != 0;
+        for (var i = 0; i < 8; i++) _nearbyTiles[i] = (mask & (1 << i)) != 0;
     }
     
     private void CreateSubTileTextureLayout(int mask, int tileSize, int halfTileSize, Texture seedTexture)
     {
         var layout = new Layout();
-        int tileTexX = tileTexCount * tileSize;
+        var tileTexX = _tileTexCount * tileSize;
 
         for (var i = 0; i < 4; i++)
         {
             var texX = 1;
             var texY = 1;
 
-            int subTileX = i % 2;
-            int subTileY = i / 2;
+            var subTileX = i % 2;
+            var subTileY = i / 2;
 
-            int offsetX = subTileX * 2 - 1;
-            int offsetY = subTileY * 2 - 1;
+            var offsetX = subTileX * 2 - 1;
+            var offsetY = subTileY * 2 - 1;
 
             if (GetNearby(offsetX, 0)) texX += offsetX;
             if (GetNearby(0, offsetY)) texY += offsetY;
@@ -138,27 +138,27 @@ public class AutoTileTexture
                 texY = 1 - subTileY;
             }
 
-            int subTileTexX = texX * halfTileSize;
-            int subTileTexY = seedTexture.height - texY * halfTileSize - halfTileSize;
+            var subTileTexX = texX * halfTileSize;
+            var subTileTexY = seedTexture.height - texY * halfTileSize - halfTileSize;
 
-            Graphics.CopyTexture(seedTexture, 0, 0, subTileTexX, subTileTexY, halfTileSize, halfTileSize, texture,
-                0, 0, tileTexX + subTileX * halfTileSize, texture.height - subTileY * halfTileSize - halfTileSize);
+            Graphics.CopyTexture(seedTexture, 0, 0, subTileTexX, subTileTexY, halfTileSize, halfTileSize, _texture,
+                0, 0, tileTexX + subTileX * halfTileSize, _texture.height - subTileY * halfTileSize - halfTileSize);
             
             layout.SetTexPos(i, texX, texY);
         }
 
         // Reuse existing sprites if this new one is not unique.
-        if (layoutSprites.TryGetValue(layout, out Sprite existingSprite))
+        if (_layoutSprites.TryGetValue(layout, out Sprite existingSprite))
         {
-            maskSprites.Add(mask, existingSprite);
+            _maskSprites.Add(mask, existingSprite);
         }
         else
         {
-            var sprite = Sprite.Create(texture, new Rect(tileTexX, 0, tileSize, tileSize), new Vector2(0.5f, 0.5f),
+            var sprite = Sprite.Create(_texture, new Rect(tileTexX, 0, tileSize, tileSize), new Vector2(0.5f, 0.5f),
                 tileSize, 0);
-            layoutSprites.Add(layout, sprite);
-            maskSprites.Add(mask, sprite);
-            tileTexCount++;
+            _layoutSprites.Add(layout, sprite);
+            _maskSprites.Add(mask, sprite);
+            _tileTexCount++;
         }
     }
 
@@ -168,10 +168,10 @@ public class AutoTileTexture
         x += 1;
         y += 1;
 
-        int index = x + y * 3;
+        var index = x + y * 3;
 
         if (y > 1 || (y == 1 && x > 1)) index--;
 
-        return nearbyTiles[index];
+        return _nearbyTiles[index];
     }
 }

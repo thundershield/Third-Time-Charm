@@ -9,12 +9,12 @@ public class AutoTile : Tile
 {
     [SerializeField] private Texture seedTexture;
     [SerializeField] private int tileSize;
-    private AutoTileTexture texture;
-    private readonly bool[] neighborBuffer = new bool[8];
+    private AutoTileTexture _texture;
+    private readonly bool[] _neighborBuffer = new bool[8];
 
     public void OnEnable()
     {
-        texture = new AutoTileTexture(seedTexture, tileSize);
+        _texture = new AutoTileTexture(seedTexture, tileSize);
     }
 
     public override void RefreshTile(Vector3Int position, ITilemap tilemap)
@@ -38,12 +38,12 @@ public class AutoTile : Tile
             {
                 if (y == 0 && x == 0) continue;
                 
-                neighborBuffer[i] = !HasSelf(tilemap, position + new Vector3Int(x, y, 0));
+                _neighborBuffer[i] = !HasSelf(tilemap, position + new Vector3Int(x, y, 0));
                 i++;
             }
         }
 
-        tileData.sprite = texture.GetSprite(neighborBuffer);
+        tileData.sprite = _texture.GetSprite(_neighborBuffer);
         tileData.color = Color.white;
         tileData.colliderType = ColliderType.None;
     }

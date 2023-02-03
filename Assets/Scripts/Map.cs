@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = System.Random;
@@ -12,7 +11,7 @@ public class Map : MonoBehaviour
 
     private void Start()
     {
-        _worldGenerator = new WorldGenerator();
+        _worldGenerator = new GridWorldGenerator();
         _tilemap = GetComponent<Tilemap>();
         
         _worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));

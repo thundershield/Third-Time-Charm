@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = System.Random;
 
-public class WorldGenerator : IWorldGenerator
+public class TestWorldGenerator : IWorldGenerator
 {
     private const int ChunkSize = 16;
     

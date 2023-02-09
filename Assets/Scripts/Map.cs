@@ -5,7 +5,7 @@ using Random = System.Random;
 [RequireComponent(typeof(Tilemap))]
 public class Map : MonoBehaviour
 {
-    [SerializeField] private AutoTile[] tiles;
+    [SerializeField] private Tile[] tiles;
     private Tilemap _tilemap;
     private IWorldGenerator _worldGenerator;
 

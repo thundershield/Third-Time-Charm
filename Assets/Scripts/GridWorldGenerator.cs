@@ -38,7 +38,8 @@ public class GridWorldGenerator : IWorldGenerator
 
     private readonly TileType[] _wallTiles =
     {
-        TileType.Sand
+        TileType.Wall,
+        TileType.Tree,
     };
 
     private const TileType EmptyTile = TileType.Grass;
@@ -113,11 +114,7 @@ public class GridWorldGenerator : IWorldGenerator
                         break;
                 }
 
-                var tile = tileTemplate switch
-                {
-                    Rooms.Solid => Choose(_wallTiles),
-                    _ => EmptyTile
-                };
+                var tile = Rooms.CharTiles[tileTemplate];
 
                 map.SetTile(tile, tilePosition.x, tilePosition.y);
             }

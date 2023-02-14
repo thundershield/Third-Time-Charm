@@ -7,18 +7,16 @@ using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
-public class LobbyManager : MonoBehaviour {
-
-
+public class LobbyManager : MonoBehaviour 
+{
     public static LobbyManager Instance { get; private set; }
-
-
     public const string KEY_PLAYER_NAME = "PlayerName";
     public event EventHandler OnLeftLobby;
     public event EventHandler<LobbyEventArgs> OnJoinedLobby;
     public event EventHandler<LobbyEventArgs> OnJoinedLobbyUpdate;
     public event EventHandler<LobbyEventArgs> OnKickedFromLobby;
-    public class LobbyEventArgs : EventArgs {
+    public class LobbyEventArgs : EventArgs 
+    {
         public Lobby lobby;
     }
     public event EventHandler<OnLobbyListChangedEventArgs> OnLobbyListChanged;
@@ -179,12 +177,13 @@ public class LobbyManager : MonoBehaviour {
         }
     }
 
-    public async void JoinLobbyByCode(string lobbyCode) {
+    public async void JoinLobbyByCode(string lobbyCode) 
+    {
         Player player = GetPlayer();
 
         Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, new JoinLobbyByCodeOptions 
         {
-        Player = player
+            Player = player
         });
         joinedLobby = lobby;
         OnJoinedLobby?.Invoke(this, new LobbyEventArgs { lobby = lobby });
@@ -215,7 +214,8 @@ public class LobbyManager : MonoBehaviour {
                 Lobby lobby = await LobbyService.Instance.UpdatePlayerAsync(joinedLobby.Id, playerId, options);
                 joinedLobby = lobby;
                 OnJoinedLobbyUpdate?.Invoke(this, new LobbyEventArgs { lobby = joinedLobby });
-            } catch (LobbyServiceException e) 
+            } 
+            catch (LobbyServiceException e) 
             {
             }
         }
@@ -257,7 +257,8 @@ public class LobbyManager : MonoBehaviour {
             try 
             {
                 await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
-            } catch (LobbyServiceException e) 
+            } 
+            catch (LobbyServiceException e) 
             {
             }
         }

@@ -1253,7 +1253,7 @@ GameObject:
   - component: {fileID: 215617588}
   - component: {fileID: 215617590}
   m_Layer: 5
-  m_Name: ZombieButton
+  m_Name: changeClass3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1276,7 +1276,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 739, y: 350}
+  m_AnchoredPosition: {x: -676, y: 597}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &215617588
@@ -1686,8 +1686,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -301.00003, y: 311}
-  m_SizeDelta: {x: 31.4, y: 50}
+  m_AnchoredPosition: {x: -315.6814, y: 311}
+  m_SizeDelta: {x: 2.0372, y: 17.701}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &275624740
 MonoBehaviour:
@@ -3658,7 +3658,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GameMode
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4944,12 +4944,7 @@ MonoBehaviour:
   container: {fileID: 517885538}
   lobbyNameText: {fileID: 692929696}
   playerCountText: {fileID: 697043155}
-  gameModeText: {fileID: 1363225968}
-  changeMarineButton: {fileID: 1682054775}
-  changeNinjaButton: {fileID: 2127062502}
-  changeZombieButton: {fileID: 215617590}
   leaveLobbyButton: {fileID: 935551613}
-  changeGameModeButton: {fileID: 1279448330}
 --- !u!1 &1238551660
 GameObject:
   m_ObjectHideFlags: 0
@@ -5303,7 +5298,7 @@ GameObject:
   - component: {fileID: 1279448331}
   - component: {fileID: 1279448330}
   m_Layer: 5
-  m_Name: GameModeButton
+  m_Name: trash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5326,7 +5321,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 739, y: 270}
+  m_AnchoredPosition: {x: -676, y: 597}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1279448330
@@ -5930,7 +5925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3275604382287273273, guid: 8a2917d3ce187824fad93ad7e3795753, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3275604382287273273, guid: 8a2917d3ce187824fad93ad7e3795753, type: 3}
       propertyPath: m_AnchorMax.x
@@ -6851,7 +6846,7 @@ GameObject:
   - component: {fileID: 1682054773}
   - component: {fileID: 1682054775}
   m_Layer: 5
-  m_Name: MarineButton
+  m_Name: changeClass1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6874,7 +6869,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 739, y: 514}
+  m_AnchoredPosition: {x: -676, y: 597}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1682054773
@@ -8250,7 +8245,7 @@ GameObject:
   - component: {fileID: 2089917345}
   - component: {fileID: 2089917346}
   m_Layer: 5
-  m_Name: AuthenticateUI
+  m_Name: StartMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8440,7 +8435,7 @@ GameObject:
   - component: {fileID: 2127062500}
   - component: {fileID: 2127062502}
   m_Layer: 5
-  m_Name: NinjaButton
+  m_Name: changeClass2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8463,7 +8458,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 739, y: 435}
+  m_AnchoredPosition: {x: -676, y: 597}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2127062500

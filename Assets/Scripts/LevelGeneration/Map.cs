@@ -33,6 +33,8 @@ namespace LevelGeneration
             } }
         };
 
+        public bool isDone;
+
         private Tilemap _tilemap;
         private IWorldGenerator _worldGenerator;
 
@@ -42,6 +44,7 @@ namespace LevelGeneration
             _tilemap = GetComponent<Tilemap>();
 
             _worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
+            isDone = true;
         }
 
         public void SetTile(TileType tile, int x, int y)

@@ -11,7 +11,7 @@ public class PlayerControler : MonoBehaviour
     public Rigidbody2D rb; //Rigidbody of the player character
     public Animator animator; //animator controller for the player
 
-    private GameObject tilemap;
+    [SerializeField] private GameObject tilemap;
 
     private Vector2 movement; //the direction the player is moving in
     private float currentSpeed = 0;

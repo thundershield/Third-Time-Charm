@@ -14,6 +14,11 @@ public class MainMenuController : MonoBehaviour
         credits.SetActive(true);
         this.gameObject.SetActive(false);
     }
+
+    public void Multiplayer()
+    {
+        SceneManager.LoadScene(2);
+    }
     public void QuitGame(){
         Debug.Log("Player has quit the game");
         Application.Quit();

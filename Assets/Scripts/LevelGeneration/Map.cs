@@ -33,8 +33,10 @@ namespace LevelGeneration
             } }
         };
 
-        public bool isDone;
+        public delegate void LoadHandler(LevelLoadData levelLoadData);
 
+        public event LoadHandler OnLoad;
+        
         private Tilemap _tilemap;
         private IWorldGenerator _worldGenerator;
 
@@ -43,8 +45,8 @@ namespace LevelGeneration
             _worldGenerator = new GridWorldGenerator();
             _tilemap = GetComponent<Tilemap>();
 
-            _worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
-            isDone = true;
+            var levelLoadData = _worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
+            OnLoad?.Invoke(levelLoadData);
         }
 
         public void SetTile(TileType tile, int x, int y)

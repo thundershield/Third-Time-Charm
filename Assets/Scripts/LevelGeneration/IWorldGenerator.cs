@@ -5,6 +5,6 @@ namespace LevelGeneration
 {
     public interface IWorldGenerator
     {
-        public void Generate(Random random, Map map, Vector2Int size);
+        public LevelLoadData Generate(Random random, Map map, Vector2Int size);
     }
 }

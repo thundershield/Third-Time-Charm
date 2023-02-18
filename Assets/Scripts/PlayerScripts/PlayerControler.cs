@@ -11,7 +11,7 @@ public class PlayerControler : MonoBehaviour
     public Rigidbody2D rb; //Rigidbody of the player character
     public Animator animator; //animator controller for the player
 
-    [SerializeField] private GameObject tilemap;
+    public GameObject tilemap;      
 
     private Vector2 movement; //the direction the player is moving in
     private float currentSpeed = 0;
@@ -20,33 +20,27 @@ public class PlayerControler : MonoBehaviour
 
     // Start is called before the first frame update
     // Could whoever added this code please comment it? I think it's for spawning in the character, but honestly it's hard to tell
-    IEnumerator Start()
-    {
+    // IEnumerator Awake()
+    // {
 
-        tilemap = GameObject.Find("Tilemap");
-        Tilemap tmap = tilemap.GetComponent<Tilemap>();
-        LevelGeneration.Map code = tilemap.GetComponent<LevelGeneration.Map>();
+    //     tilemap = GameObject.Find("Tilemap");
+    //     Tilemap tmap = tilemap.GetComponent<Tilemap>();
+    //     LevelGeneration.Map code = tilemap.GetComponent<LevelGeneration.Map>();
 
-        yield return new WaitUntil(() => code.isDone);
+    //     yield return new WaitUntil(() => code.isDone);
     
-        for(int x = 0; x < 10 * 10 + 2; x++) {
-            for(int y = 0; y < 10 * 8 + 2; y++) {
-                var celPos = new Vector3Int(x, y, 0);
-                var sprite = tmap.GetSprite(celPos);
-                if(sprite) {
-                    if(sprite.name == "Start") {
-                        rb.position = new Vector2(celPos.x, celPos.y);
-                    }   
-                }
-            }
-        }    
-    }
-
-
-    IEnumerator waiter()
-    {
-        yield return new WaitForSeconds(2);
-    }
+    //     for(int x = 0; x < 10 * 10 + 2; x++) {
+    //         for(int y = 0; y < 10 * 8 + 2; y++) {
+    //             var celPos = new Vector3Int(x, y, 0);
+    //             var sprite = tmap.GetSprite(celPos);
+    //             if(sprite) {
+    //                 if(sprite.name == "Start") {
+    //                     rb.position = new Vector2(celPos.x, celPos.y);
+    //                 }   
+    //             }
+    //         }
+    //     }    
+    // }
 
     void Update()
     {

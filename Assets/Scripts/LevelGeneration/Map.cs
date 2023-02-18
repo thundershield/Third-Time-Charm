@@ -33,7 +33,7 @@ namespace LevelGeneration
             } }
         };
 
-        public bool isDone;
+        public bool isDone = false;
 
         private Tilemap _tilemap;
         private IWorldGenerator _worldGenerator;
@@ -46,6 +46,12 @@ namespace LevelGeneration
             _worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
             isDone = true;
         }
+
+        // Addition by Kevin to get player starting location
+        public Vector2 getStartLocation() {
+            return _worldGenerator.getSpawnPosition();
+        }
+        // Please let me know if it's unecessary, I don't fully understand the code yet
 
         public void SetTile(TileType tile, int x, int y)
         {

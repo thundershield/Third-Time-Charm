@@ -19,6 +19,9 @@ namespace LevelGeneration
         private int _yChunks;
         private int _xChunks;
 
+        /* Sorry, this class implements IWorldGenerator as well so it needs a spawn point */
+        public Vector2 getSpawnPosition(){ return new Vector2(0,0); }
+
         public void Generate(Random random, Map map, Vector2Int size)
         {
             _yChunks = size.y / ChunkSize;

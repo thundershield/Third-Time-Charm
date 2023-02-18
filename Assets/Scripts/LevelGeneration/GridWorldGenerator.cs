@@ -26,6 +26,10 @@ namespace LevelGeneration
         }
 
         public Vector2 SpawnPosition { get; private set; }
+
+        /* Kevin */
+        public Vector2 getSpawnPosition(){ return SpawnPosition; }
+
         public Vector2 ExitPosition { get; private set; }
         
         private static readonly Dictionary<RoomType, int> RoomTypePriority = new()

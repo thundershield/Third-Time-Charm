@@ -6,9 +6,9 @@ public class PlayerCamera : MonoBehaviour {
 
     public GameObject player;
 
-     private Vector3 offset; 
+    private Vector3 offset; 
 
-    void Start() {
+    public void startGame() {
         offset = transform.position - player.transform.position;
         transform.position = player.transform.position;
     }

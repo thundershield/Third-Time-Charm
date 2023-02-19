@@ -18,28 +18,11 @@ public class PlayerControler : MonoBehaviour
     int direction = 2;        //Keeps track of what direction we are facing: 0 = Up, 1 = Right, 2 = Down, 3 = Left
 
 
-    // Start is called before the first frame update
-    // Could whoever added this code please comment it? I think it's for spawning in the character, but honestly it's hard to tell
+    // Code to be used if we ever need to do things when a new player prefab is created
     // IEnumerator Awake()
     // {
 
-    //     tilemap = GameObject.Find("Tilemap");
-    //     Tilemap tmap = tilemap.GetComponent<Tilemap>();
-    //     LevelGeneration.Map code = tilemap.GetComponent<LevelGeneration.Map>();
-
-    //     yield return new WaitUntil(() => code.isDone);
-    
-    //     for(int x = 0; x < 10 * 10 + 2; x++) {
-    //         for(int y = 0; y < 10 * 8 + 2; y++) {
-    //             var celPos = new Vector3Int(x, y, 0);
-    //             var sprite = tmap.GetSprite(celPos);
-    //             if(sprite) {
-    //                 if(sprite.name == "Start") {
-    //                     rb.position = new Vector2(celPos.x, celPos.y);
-    //                 }   
-    //             }
-    //         }
-    //     }    
+    //    
     // }
 
     void Update()

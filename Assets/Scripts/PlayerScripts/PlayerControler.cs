@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -11,19 +8,9 @@ public class PlayerControler : MonoBehaviour
     public Rigidbody2D rb; //Rigidbody of the player character
     public Animator animator; //animator controller for the player
 
-    public GameObject tilemap;      
-
     private Vector2 movement; //the direction the player is moving in
     private float currentSpeed = 0;
     int direction = 2;        //Keeps track of what direction we are facing: 0 = Up, 1 = Right, 2 = Down, 3 = Left
-
-
-    // Code to be used if we ever need to do things when a new player prefab is created
-    // IEnumerator Awake()
-    // {
-
-    //    
-    // }
 
     void Update()
     {

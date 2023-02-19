@@ -19,15 +19,14 @@ namespace LevelGeneration
         private int _yChunks;
         private int _xChunks;
 
-        /* Sorry, this class implements IWorldGenerator as well so it needs a spawn point */
-        public Vector2 getSpawnPosition(){ return new Vector2(0,0); }
-
-        public void Generate(Random random, Map map, Vector2Int size)
+        public LevelLoadData Generate(Random random, Map map, Vector2Int size)
         {
             _yChunks = size.y / ChunkSize;
             _xChunks = size.x / ChunkSize;
             _halfChunks = new HalfChunkType[_yChunks * 2 * _xChunks * 2];
             Ground(random, map, size);
+
+            return new LevelLoadData();
         }
 
         private void Ground(Random random, Map map, Vector2Int size)

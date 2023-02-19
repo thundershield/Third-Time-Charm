@@ -8,12 +8,18 @@ namespace LevelGeneration
 {
     public class GridWorldGenerator : IWorldGenerator
     {
-        public void Generate(Random random, Map map, Vector2Int size)
+        public LevelLoadData Generate(Random random, Map map, Vector2Int size)
         {
             var seed = random.Next();
             ChooseRooms(seed);
             GenerateBorder(map);
             GenerateRooms(map);
+            
+            return new LevelLoadData
+            {
+                StartPosition = StartPosition,
+                EndPosition = EndPosition
+            };
         }
 
         private enum RoomType
@@ -25,12 +31,8 @@ namespace LevelGeneration
             Optional
         }
 
-        public Vector2 SpawnPosition { get; private set; }
-
-        /* Kevin */
-        public Vector2 getSpawnPosition(){ return SpawnPosition; }
-
-        public Vector2 ExitPosition { get; private set; }
+        public Vector2 StartPosition { get; private set; }
+        public Vector2 EndPosition { get; private set; }
         
         private static readonly Dictionary<RoomType, int> RoomTypePriority = new()
         {
@@ -105,10 +107,10 @@ namespace LevelGeneration
                     switch (tile)
                     {
                         case TileType.Start:
-                            SpawnPosition = centeredTilePosition;
+                            StartPosition = centeredTilePosition;
                             break;
                         case TileType.End:
-                            ExitPosition = centeredTilePosition;
+                            EndPosition = centeredTilePosition;
                             break;
                     }
 

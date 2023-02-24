@@ -42,6 +42,8 @@ namespace LevelGeneration
 
         private void Start()
         {
+            Rooms.ValidateAllRooms();
+            
             _worldGenerator = new GridWorldGenerator();
             _tilemap = GetComponent<Tilemap>();
 

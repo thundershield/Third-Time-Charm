@@ -17,6 +17,11 @@ namespace LevelGeneration
         private void LevelLoadHandler(LevelLoadData levelLoadData)
         {
             Instantiate(playerPrefab, levelLoadData.StartPosition, Quaternion.identity);
+
+            // foreach (var enemyPosition in levelLoadData.EnemyPositions)
+            // {
+            //     Instantiate(playerPrefab, enemyPosition + Vector2.one * 0.5f, Quaternion.identity);
+            // }
         }
     }
 }

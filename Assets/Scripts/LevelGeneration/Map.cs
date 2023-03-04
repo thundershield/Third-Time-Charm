@@ -57,6 +57,13 @@ namespace LevelGeneration
             _tilemap.SetTile(new Vector3Int(x, y, 0), tiles[tileIndex]);
         }
 
+        public bool IsTileOccupied(int x, int y)
+        {
+            var position = new Vector3Int(x, y, 0);
+            var tile = _tilemap.GetTile<Tile>(position);
+            return tile is not null && tile.colliderType != Tile.ColliderType.None;
+        }
+
         public void SetRect(TileType tile, int x, int y, int width, int height)
         {
             for (var xi = 0; xi < width; xi++)

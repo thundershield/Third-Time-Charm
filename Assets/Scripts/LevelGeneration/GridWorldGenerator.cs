@@ -13,12 +13,13 @@ namespace LevelGeneration
             var seed = random.Next();
             ChooseRooms(seed);
             GenerateBorder(map);
-            GenerateRooms(map);
-            
+            var enemyPositions = GenerateRooms(map);
+
             return new LevelLoadData
             {
                 StartPosition = StartPosition,
-                EndPosition = EndPosition
+                EndPosition = EndPosition,
+                EnemyPositions = enemyPositions
             };
         }
 
@@ -33,7 +34,7 @@ namespace LevelGeneration
 
         public Vector2 StartPosition { get; private set; }
         public Vector2 EndPosition { get; private set; }
-        
+
         private static readonly Dictionary<RoomType, int> RoomTypePriority = new()
         {
             { RoomType.Optional, 0 },
@@ -47,6 +48,8 @@ namespace LevelGeneration
             Map.TileCategories[TileCategory.Wall].Concat(Map.TileCategories[TileCategory.Plant]).ToArray();
 
         private const int MapSize = 10;
+        private const int MaxEnemiesPerRoom = 3;
+        private const int RoomsPerEnemySpawn = 4;
 
         private const int MaxHorizontalMoves = MapSize;
         private const int PossibleMoves = 10;
@@ -59,7 +62,7 @@ namespace LevelGeneration
         private void SetRoom(int x, int y, RoomType roomType)
         {
             if (x is < 0 or >= MapSize || y is < 0 or >= MapSize) return;
-            
+
             // Replacing the current room with a room type that has fewer openings could
             // make the level impossible to complete.
             var oldRoomType = GetRoom(x, y);
@@ -79,12 +82,32 @@ namespace LevelGeneration
             return array[_random.Next(array.Length)];
         }
 
-        private void GenerateRooms(Map map)
+        private void AddRoomEnemyPosition(Map map, int roomX, int roomY, List<Vector2> enemyPositions)
         {
+            if (_random.Next(RoomsPerEnemySpawn) != 0) return;
+
+            var enemyCount = _random.Next(MaxEnemiesPerRoom + 1);
+
+            for (var i = 0; i < enemyCount; i++)
+            {
+                var enemyX = roomX * Rooms.RoomWidth + _random.Next(Rooms.RoomWidth);
+                var enemyY = roomY * Rooms.RoomHeight + _random.Next(Rooms.RoomHeight);
+
+                if (map.IsTileOccupied(enemyX, enemyY)) continue;
+
+                enemyPositions.Add(new Vector2(enemyX, enemyY));
+            }
+        }
+
+        private List<Vector2> GenerateRooms(Map map)
+        {
+            var enemyPositions = new List<Vector2>();
+
             for (var x = 0; x < MapSize; x++)
             for (var y = 0; y < MapSize; y++)
             {
-                var roomTemplate = Choose(GetRoom(x, y) switch
+                var roomType = GetRoom(x, y);
+                var roomTemplate = Choose(roomType switch
                 {
                     RoomType.LeftRightOpen => Rooms.LeftRightOpen,
                     RoomType.AllOpen => Rooms.AllOpen,
@@ -116,7 +139,14 @@ namespace LevelGeneration
 
                     map.SetTile(tile, tilePosition.x, tilePosition.y);
                 }
+
+                // Don't spawn enemies near the player's spawn or exit.
+                if (roomType is RoomType.AllOpenSpawn or RoomType.AllOpenExit) continue;
+
+                AddRoomEnemyPosition(map, x, y, enemyPositions);
             }
+
+            return enemyPositions;
         }
 
         private void GenerateBorder(Map map)
@@ -150,14 +180,14 @@ namespace LevelGeneration
                 if (horizontalMoves > MaxHorizontalMoves || nextMove == MoveDown || x is < 0 or >= MapSize)
                 {
                     x = Math.Clamp(x, 0, MapSize - 1);
-                    
+
                     // The current room needs to be changed to have an opening on the bottom.
                     SetRoom(x, y, RoomType.AllOpen);
-                    
+
                     // The new room below it will have an opening on the top to connect to it.
                     y--;
                     SetRoom(x, y, RoomType.AllOpen);
-                    
+
                     horizontalMoves = 0;
                     continue;
                 }

@@ -43,11 +43,15 @@ namespace LevelGeneration
         private void Start()
         {
             Rooms.ValidateAllRooms();
-            
-            _worldGenerator = new GridWorldGenerator();
-            _tilemap = GetComponent<Tilemap>();
 
-            var levelLoadData = _worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
+            Generate(new GridWorldGenerator());
+        }
+
+        public void Generate(IWorldGenerator worldGenerator)
+        {
+            _tilemap = GetComponent<Tilemap>();
+            
+            var levelLoadData = worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
             OnLoad?.Invoke(levelLoadData);
         }
 

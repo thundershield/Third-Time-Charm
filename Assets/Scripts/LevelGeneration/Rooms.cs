@@ -181,7 +181,7 @@ namespace LevelGeneration
             ".........."
         };
 
-        private static void ValidateRoom(string name, string room, int roomI, bool horizontalMustBeOpen, bool verticalMustBeOpen)
+        public static void ValidateRoom(string name, string room, int roomI, bool horizontalMustBeOpen, bool verticalMustBeOpen)
         {
             const int verticalOpeningEnd = VerticalOpeningStart + VerticalOpeningSize;
             const int horizontalOpeningEnd = HorizontalOpeningStart + HorizontalOpeningSize;
@@ -216,7 +216,7 @@ namespace LevelGeneration
             }
         }
         
-        private static void ValidateRoomSet(string name, string[] rooms, bool horizontalMustBeOpen,
+        public static void ValidateRoomSet(string name, string[] rooms, bool horizontalMustBeOpen,
             bool verticalMustBeOpen)
         {
             for (var i = 0; i < rooms.Length; i++)

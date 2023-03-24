@@ -32,6 +32,8 @@ public class NPC : MonoBehaviour
                 npcDialogBox.SetActive(true);
                 npcName.text = npcNameString;
                 npcDialogText.text = npcTextString;
+                
+                
             }
         }
     }

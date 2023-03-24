@@ -6339,7 +6339,7 @@ MonoBehaviour:
   chestDialogBox: {fileID: 304568424}
   npcName: {fileID: 1759079688}
   chestDialogText: {fileID: 799430608}
-  npcNameString: Chest
+  chestNameString: 
   chestTextString: Congratulations! You have recieved an <Item>.
   chestTriggered: 0
 --- !u!1 &1828892198

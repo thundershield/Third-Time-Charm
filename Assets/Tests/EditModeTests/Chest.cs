@@ -19,7 +19,7 @@ public class Chest : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Update()
+    void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space) && chestTriggered)
         {
@@ -36,7 +36,7 @@ public class Chest : MonoBehaviour
         }
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.CompareTag("Player"))
         {

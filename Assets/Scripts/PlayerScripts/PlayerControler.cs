@@ -8,9 +8,18 @@ public class PlayerControler : MonoBehaviour
     public Rigidbody2D rb; //Rigidbody of the player character
     public Animator animator; //animator controller for the player
 
+    public inventory playerInventory; // reference to the inventory for when player colides with item
+
     private Vector2 movement; //the direction the player is moving in
     private float currentSpeed = 0;
     int direction = 2;        //Keeps track of what direction we are facing: 0 = Up, 1 = Right, 2 = Down, 3 = Left
+
+    void OnTriggerEnter2D(Collider2D other)
+    {   
+        if(other.gameObject.tag == "itemObject") {
+            if(playerInventory.addItem(null)) { Destroy(other.gameObject); }
+        }
+    }
 
     void Update()
     {

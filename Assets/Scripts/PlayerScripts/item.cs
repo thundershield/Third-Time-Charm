@@ -38,11 +38,14 @@ using UnityEngine.EventSystems;
 			image.raycastTarget = true;
 		}
 
-		public void OnPointerDown(PointerEventData eventData) {}
+		public void OnPointerDown(PointerEventData eventData) {
+			inventory.clickingItem = true;
+		}
 
 		public void OnPointerUp(PointerEventData pointerEventData)
-	    {
-	    	if(!pointerEventData.dragging) {
+	    {	
+	    	inventory.clickingItem = false;
+	    	if(!pointerEventData.dragging && inventory.isOpen) {
 		        //Output the name of the GameObject that is being clicked
 		        if(inventory.selected != null) {
 		        	inventory.selected.GetComponent<Image>().color = new Color32(140,140,140,255);

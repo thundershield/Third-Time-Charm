@@ -19,6 +19,7 @@ using TMPro;
     public class inventoryMenu : MonoBehaviour {
 
         public bool isOpen = true;
+        public bool clickingItem = false;
 
         private Dictionary<int, itemInfo> items = new Dictionary<int, itemInfo>();
 
@@ -51,23 +52,13 @@ using TMPro;
                     items.Add(Int32.Parse(row[0]), newItem);
                 }
             }
+
+            deselectItem();
+            closeInventory();
         }
 
-        public void hidePopup() {
-            Transform itemPopup = transform.Find("itemPopup");
-            itemPopup.gameObject.GetComponent<Image>().enabled = false;
-            Transform textGroup = itemPopup.Find("TextGroup");
-            textGroup.gameObject.GetComponent<Image>().enabled = true;
-            textGroup.Find("itemName").gameObject.GetComponent<TextMeshProUGUI>().enabled = false;
-            textGroup.Find("itemText").gameObject.GetComponent<TextMeshProUGUI>().enabled = false;
-            textGroup.Find("itemStats").gameObject.GetComponent<TextMeshProUGUI>().enabled = false;
-        }
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape) && isOpen)
-            {
-                transform.Find("Background").localScale -= new Vector3(0.0f,0.77f,0.0f); 
+        public void closeInventory() {
+            transform.Find("Background").localScale -= new Vector3(0.0f,0.77f,0.0f); 
                 transform.Find("Background").position += new Vector3(0.0f,215f,0.0f); 
 
                 isOpen = false;
@@ -85,55 +76,107 @@ using TMPro;
                 transform.Find("PlayerStats").gameObject.SetActive(false);
 
                 if(selected != null) {
-                    hidePopup();
+                    selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+                    selected = null;
+                    deselectItem();
+                }
+        }
+
+        public void openInventory() {
+            transform.Find("Background").localScale += new Vector3(0.0f,0.77f,0.0f); 
+            transform.Find("Background").position -= new Vector3(0.0f,215f,0.0f); 
+
+            isOpen = true;
+            // Grid
+            GameObject grid = transform.Find("Grid").gameObject; 
+            for(int j = 0; j < 10; j++) {
+                Transform tile = grid.transform.GetChild(10+j);
+                tile.gameObject.GetComponent<Image>().enabled = true;
+                if(tile.childCount > 0) {
+                    tile.GetChild(0).gameObject.GetComponent<Image>().enabled = true;
                 }
             }
-            else if(Input.GetKeyDown(KeyCode.Escape) && !isOpen) {
-                transform.Find("Background").localScale += new Vector3(0.0f,0.77f,0.0f); 
-                transform.Find("Background").position -= new Vector3(0.0f,215f,0.0f); 
 
-                isOpen = true;
-                // Grid
-                GameObject grid = transform.Find("Grid").gameObject; 
-                for(int j = 0; j < 10; j++) {
-                    Transform tile = grid.transform.GetChild(10+j);
-                    tile.gameObject.GetComponent<Image>().enabled = true;
-                    if(tile.childCount > 0) {
-                        tile.GetChild(0).gameObject.GetComponent<Image>().enabled = true;
-                    }
+            // Stat Objects
+            transform.Find("StatObjects").gameObject.SetActive(true);
+
+            //
+            transform.Find("PlayerStats").gameObject.SetActive(true);
+        }
+
+        public void rotateInventory() {
+            GameObject grid = transform.Find("Grid").gameObject;
+            for(int j = 0; j < 10; j++) {
+                Transform topSlot = grid.transform.GetChild(j);
+                Transform bottomSlot = grid.transform.GetChild(10+j);
+
+                if(topSlot.childCount > 0 && bottomSlot.childCount > 0) {
+                    Transform topTile = topSlot.transform.GetChild(0);
+                    Transform bottomTile = bottomSlot.transform.GetChild(0);
+                    bottomTile.gameObject.GetComponent<Image>().enabled = true;
+                    topTile.gameObject.GetComponent<Image>().enabled = false;
+                    topTile.SetParent(bottomSlot);
+                    bottomTile.SetParent(topSlot);
+                }
+                else if(topSlot.childCount > 0) {
+                    Transform topTile = topSlot.transform.GetChild(0);
+                    topTile.gameObject.GetComponent<Image>().enabled = false;
+                    topTile.SetParent(bottomSlot);  
+                }
+                else if(bottomSlot.childCount > 0) {
+                    Transform bottomTile = bottomSlot.transform.GetChild(0);
+                    bottomTile.gameObject.GetComponent<Image>().enabled = true;
+                    bottomTile.SetParent(topSlot);
                 }
 
-                // Stat Objects
-                transform.Find("StatObjects").gameObject.SetActive(true);
+            }
+        }
 
-                //
-                transform.Find("PlayerStats").gameObject.SetActive(true);  
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && isOpen)
+            {
+                closeInventory();
+            }
+            else if(Input.GetKeyDown(KeyCode.Escape) && !isOpen) {
+                openInventory();
+            }
+            if(Input.GetMouseButtonDown(0) && selected != null && !clickingItem) {
+                selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+                selected = null;
+                deselectItem();
+            }
+            else if(Input.GetKeyDown(KeyCode.Q) && !isOpen) {
+                rotateInventory();
             }
         }
 
         public void selectItem(int itemId) {
             RectTransform itemPopup = (RectTransform)transform.Find("itemPopup");
-            itemPopup.gameObject.GetComponent<Image>().enabled = true;
-            Transform textGroup = itemPopup.Find("TextGroup");
-            textGroup.gameObject.GetComponent<Image>().enabled = true;
-            textGroup.Find("itemName").gameObject.GetComponent<TextMeshProUGUI>().enabled = true; 
-            textGroup.Find("itemText").gameObject.GetComponent<TextMeshProUGUI>().enabled = true;
-            textGroup.Find("itemStats").gameObject.GetComponent<TextMeshProUGUI>().enabled = true;
+
+            itemPopup.gameObject.SetActive(true);
 
             itemInfo itemStats = queryItem(itemId);
-            itemPopup.position = selected.transform.position + new Vector3(220,45-(itemPopup.rect.height/2),0);
             Transform name = itemPopup.Find("TextGroup").Find("itemName");
             name.gameObject.GetComponent<TextMeshProUGUI>().text = itemStats.name;
             Transform text = itemPopup.Find("TextGroup").Find("itemText");
-            name.gameObject.GetComponent<TextMeshProUGUI>().text = itemStats.flavorText;
+            text.gameObject.GetComponent<TextMeshProUGUI>().text = itemStats.flavorText;
             Transform stats = itemPopup.Find("TextGroup").Find("itemStats");
-            name.gameObject.GetComponent<TextMeshProUGUI>().text = itemStats.statDescriptiom;
+            stats.gameObject.GetComponent<TextMeshProUGUI>().text = itemStats.statDescriptiom;
 
+            Canvas.ForceUpdateCanvases();
+            itemPopup.gameObject.GetComponent<VerticalLayoutGroup>().enabled = false;
+            itemPopup.gameObject.GetComponent<VerticalLayoutGroup>().enabled = true;
+            itemPopup.gameObject.GetComponent<ContentSizeFitter>().enabled = false;
+            itemPopup.gameObject.GetComponent<ContentSizeFitter>().enabled = true;
+            itemPopup.ForceUpdateRectTransforms();
+
+            // itemPopup.position = selected.transform.position + new Vector3(220,45-(itemPopup.rect.height/2),0);
         }
 
         public void deselectItem() {
-            hidePopup();   
+            Transform itemPopup = transform.Find("itemPopup");
+            itemPopup.gameObject.SetActive(false);
         }
-
     }
 // }

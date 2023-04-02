@@ -10,5 +10,7 @@
         Start,
         End,
         IndoorDecor,
+        LockedDoor,
+        OpenDoor
     }
 }

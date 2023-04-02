@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using UnityEngine;
 
 namespace LevelGeneration
 {
@@ -22,11 +20,14 @@ namespace LevelGeneration
             { '^', TileCategory.Plant },
             { '#', TileCategory.Wall },
             { '_', TileCategory.Floor },
-            { '~', TileCategory.IndoorDecor }
+            { '~', TileCategory.IndoorDecor },
+            { 'L', TileCategory.LockedDoor },
+            { 'O', TileCategory.OpenDoor }
         };
 
-        public static readonly string[] AllOpenSpawn =
+        public static readonly Room[] AllOpenSpawn =
         {
+            new (RoomCategory.Outdoor, 
             ".........." +
             ".........." +
             "....[....." +
@@ -34,11 +35,12 @@ namespace LevelGeneration
             ".........." +
             ".........." +
             ".........." +
-            ".........."
+            "..........")
         };
 
-        public static readonly string[] AllOpenExit =
+        public static readonly Room[] AllOpenExit =
         {
+            new (RoomCategory.Outdoor,
             ".........." +
             ".........." +
             ".........." +
@@ -46,27 +48,30 @@ namespace LevelGeneration
             ".........." +
             "......]..." +
             ".........." +
-            ".........."
+            "..........")
         };
 
-        public static readonly string[] LeftRightOpen =
+        public static readonly Room[] LeftRightOpen =
         {
-            "##########" +
+            new (RoomCategory.Indoor,
+            "####LL####" +
             "#____~~__#" +
             "#________#" +
             "#__~~____#" +
             "#________#" +
             "#________#" +
-            "__________" +
-            "##########",
-            "##########" +
+            "O________O" +
+            "####LL####"),
+            new (RoomCategory.Indoor,
+            "####LL####" +
             "#________#" +
             "#________#" +
             "#__~_____#" +
             "#______~~#" +
             "#________#" +
-            "__________" +
-            "##########",
+            "O________O" +
+            "####LL####"),
+            new (RoomCategory.Outdoor,
             "^^^^^^^^^^" +
             "^....^^..^" +
             "^........^" +
@@ -74,7 +79,8 @@ namespace LevelGeneration
             "^........^" +
             "^........^" +
             ".........." +
-            "^^^^^^^^^^",
+            "^^^^^^^^^^"),
+            new (RoomCategory.Outdoor,
             "^^^^^^^^^^" +
             "^....^^..^" +
             "^........^" +
@@ -82,11 +88,12 @@ namespace LevelGeneration
             "^........^" +
             "^........^" +
             ".........." +
-            "^^^^^^^^^^"
+            "^^^^^^^^^^")
         };
 
-        public static readonly string[] AllOpen =
+        public static readonly Room[] AllOpen =
         {
+            new (RoomCategory.Outdoor,
             ".........." +
             ".........." +
             ".........." +
@@ -94,7 +101,8 @@ namespace LevelGeneration
             ".........." +
             ".........." +
             ".........." +
-            "..........",
+            ".........."),
+            new (RoomCategory.Outdoor,
             ".........." +
             "...^^....." +
             "...^^....." +
@@ -102,59 +110,66 @@ namespace LevelGeneration
             "......^^.." +
             "......^..." +
             ".........." +
-            "..........",
-            "####__####" +
+            ".........."),
+            new (RoomCategory.Indoor,
+            "####OO####" +
             "#____~~__#" +
             "#________#" +
             "#__~~____#" +
             "#________#" +
             "#________#" +
-            "__________" +
-            "####__####",
-            "####__####" +
+            "O________O" +
+            "####OO####"),
+            new (RoomCategory.Indoor,
+            "####OO####" +
             "#________#" +
             "#~_______#" +
             "#~_______#" +
             "#_______~#" +
             "#________#" +
-            "__________" +
-            "####__####"
+            "O________O" +
+            "####OO####")
         };
 
-        public static readonly string[] Optional =
+        public static readonly Room[] Optional =
         {
-            "####__####" +
+            new (RoomCategory.Indoor,
+            "####OO####" +
             "#________#" +
             "#________#" +
             "#____~~__#" +
             "#____~~__#" +
             "#________#" +
-            "#________#" +
-            "##########",
-            "##########" +
+            "L________L" +
+            "##########"),
+            new (RoomCategory.Indoor,
+            "####LL####" +
             "#________#" +
             "#__~_~~__#" +
             "#________#" +
             "#________#" +
             "#________#" +
-            "#________#" +
-            "####__####",
-            "##########" +
+            "L________L" +
+            "####OO####"),
+            new (RoomCategory.Indoor,
+            "####LL####" +
             "#________#" +
             "#__~_____#" +
             "#________#" +
             "#________#" +
             "#____~___#" +
-            "#_________" +
-            "##########",
-            "##########" +
+            "L________O" +
+            "####LL####"),
+            new (RoomCategory.Indoor,
+            "####LL####" +
             "#________#" +
             "#________#" +
             "#_______~#" +
             "#_______~#" +
             "#__~_____#" +
-            "_________#" +
-            "##########",
+            "O________L" +
+            "####LL####"),
+            new (RoomCategory.Outdoor,
             ".........." +
             ".........." +
             ".........." +
@@ -162,7 +177,8 @@ namespace LevelGeneration
             ".........." +
             ".........." +
             ".........." +
-            "..........",
+            ".........."),
+            new (RoomCategory.Outdoor,
             "....^....." +
             ".........." +
             ".........." +
@@ -170,7 +186,8 @@ namespace LevelGeneration
             ".........." +
             ".........." +
             ".^^......." +
-            "..........",
+            ".........."),
+            new (RoomCategory.Outdoor,
             ".........." +
             "...^^^^..." +
             "....^^^^.." +
@@ -178,10 +195,15 @@ namespace LevelGeneration
             ".........." +
             "..^^^....." +
             "...^^^...." +
-            ".........."
+            "..........")
         };
 
-        public static void ValidateRoom(string name, string room, int roomI, bool horizontalMustBeOpen, bool verticalMustBeOpen)
+        public static bool IsTileCategoryValidDoorway(TileCategory category)
+        {
+            return category is TileCategory.Floor or TileCategory.Ground or TileCategory.OpenDoor;
+        }
+
+        public static void ValidateRoom(string name, Room room, int roomI, bool horizontalMustBeOpen, bool verticalMustBeOpen)
         {
             const int verticalOpeningEnd = VerticalOpeningStart + VerticalOpeningSize;
             const int horizontalOpeningEnd = HorizontalOpeningStart + HorizontalOpeningSize;
@@ -192,9 +214,9 @@ namespace LevelGeneration
                 {
                     for (var x = VerticalOpeningStart; x < verticalOpeningEnd; x++)
                     {
-                        var xChar = room[x + y * RoomWidth];
+                        var xChar = room.Chars[x + y * RoomWidth];
                         var charCategory = CharCategories[xChar];
-                        if (charCategory is TileCategory.Floor or TileCategory.Ground) continue;
+                        if (IsTileCategoryValidDoorway(charCategory)) continue;
 
                         throw new ArgumentException($"Room set '{name}' is missing vertical opening in room {roomI}");
                     }
@@ -202,13 +224,13 @@ namespace LevelGeneration
 
                 if (horizontalMustBeOpen && y is >= HorizontalOpeningStart and < horizontalOpeningEnd)
                 {
-                    var leftChar = room[y * RoomWidth];
+                    var leftChar = room.Chars[y * RoomWidth];
                     var leftCharCategory = CharCategories[leftChar];
-                    var rightChar = room[RoomWidth - 1 + y * RoomWidth];
+                    var rightChar = room.Chars[RoomWidth - 1 + y * RoomWidth];
                     var rightCharCategory = CharCategories[rightChar];
 
-                    if (leftCharCategory is not TileCategory.Floor and not TileCategory.Ground ||
-                        rightCharCategory is not TileCategory.Floor and not TileCategory.Ground)
+                    if (!IsTileCategoryValidDoorway(leftCharCategory) ||
+                        !IsTileCategoryValidDoorway(rightCharCategory) )
                     {
                         throw new ArgumentException($"Room set '{name}' is missing horizontal opening in room {roomI}");
                     }
@@ -216,14 +238,14 @@ namespace LevelGeneration
             }
         }
         
-        public static void ValidateRoomSet(string name, string[] rooms, bool horizontalMustBeOpen,
+        public static void ValidateRoomSet(string name, Room[] rooms, bool horizontalMustBeOpen,
             bool verticalMustBeOpen)
         {
             for (var i = 0; i < rooms.Length; i++)
             {
                 var room = rooms[i];
                 
-                if (room.Length != RoomWidth * RoomHeight)
+                if (room.Chars.Length != RoomWidth * RoomHeight)
                     throw new ArgumentException($"Room set '{name}' has an invalid size for room {i}");
 
                 ValidateRoom(name, room, i, horizontalMustBeOpen, verticalMustBeOpen);

@@ -268,7 +268,7 @@ namespace Tests
         [Test]
         public void ValidateHorizontal()
         {
-            var validRoom =
+            var validRoom = new Room(RoomCategory.Indoor,
                 "##########" +
                 "#____~~__#" +
                 "#________#" +
@@ -276,9 +276,9 @@ namespace Tests
                 "#________#" +
                 "#________#" +
                 "__________" +
-                "##########";
+                "##########");
 
-            var invalidRoom =
+            var invalidRoom = new Room(RoomCategory.Indoor,
                 "##########" +
                 "#____~~__#" +
                 "#________#" +
@@ -286,9 +286,9 @@ namespace Tests
                 "#________#" +
                 "#________#" +
                 "_________#" +
-                "##########";
+                "##########");
 
-            var invalidRoom2 =
+            var invalidRoom2 = new Room(RoomCategory.Indoor,
                 "##########" +
                 "#____~~__#" +
                 "#________#" +
@@ -296,7 +296,7 @@ namespace Tests
                 "#________#" +
                 "#________#" +
                 "#_________" +
-                "##########";
+                "##########");
 
             Assert.DoesNotThrow(() => { Rooms.ValidateRoom(nameof(validRoom), validRoom, 0, true, false); });
 
@@ -314,7 +314,7 @@ namespace Tests
         [Test]
         public void ValidateVertical()
         {
-            var validRoom =
+            var validRoom = new Room(RoomCategory.Indoor,
                 "####__####" +
                 "#____~~__#" +
                 "#________#" +
@@ -322,9 +322,9 @@ namespace Tests
                 "#________#" +
                 "#________#" +
                 "#________#" +
-                "####__####";
+                "####__####");
 
-            var invalidRoom =
+            var invalidRoom = new Room(RoomCategory.Indoor,
                 "##########" +
                 "#____~~__#" +
                 "#________#" +
@@ -332,9 +332,9 @@ namespace Tests
                 "#________#" +
                 "#________#" +
                 "#________#" +
-                "####__####";
+                "####__####");
 
-            var invalidRoom2 =
+            var invalidRoom2 = new Room(RoomCategory.Indoor,
                 "####__####" +
                 "#____~~__#" +
                 "#________#" +
@@ -342,7 +342,7 @@ namespace Tests
                 "#________#" +
                 "#________#" +
                 "#________#" +
-                "##########";
+                "##########");
 
             Assert.DoesNotThrow(() => { Rooms.ValidateRoom(nameof(validRoom), validRoom, 0, false, true); });
 

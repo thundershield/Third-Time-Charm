@@ -587,6 +587,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: LockedDoor
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 221
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 862042c5eda6d3d4eb76d9503b0ade1e
+      internalID: -572028141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClosedDoor
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 221
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b549837a6f0b3534080ee729ca64c177
+      internalID: -1356034307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OpenDoor
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 221
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fa63840661508149b915e2268631db8
+      internalID: 738302785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -598,11 +661,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      ClosedDoor: -1356034307
       Tree: -699160322
       Path: 2070786468
       Stone: -262449458
       ClosedBook: 268420480
       Water: -672369140
+      LockedDoor: -572028141
       Bin: 1045450919
       Dresser: -1029654521
       Inkwell: -421322972
@@ -621,6 +686,7 @@ TextureImporter:
       Dirt: 1079173253
       Sand: 619094403
       OpenBook: 2066075020
+      OpenDoor: 738302785
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

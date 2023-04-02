@@ -30,7 +30,9 @@ namespace LevelGeneration
                 TileType.OpenBook,
                 TileType.RightChair,
                 TileType.Table
-            } }
+            } },
+            { TileCategory.LockedDoor, new[] { TileType.LockedDoor }},
+            { TileCategory.OpenDoor, new[] { TileType.OpenDoor }}
         };
 
         public delegate void LoadHandler(LevelLoadData levelLoadData);
@@ -58,16 +60,17 @@ namespace LevelGeneration
         public void SetTile(TileType tile, int x, int y)
         {
             var tileIndex = (int)tile;
-            _tilemap.SetTile(new Vector3Int(x, y, 0), tiles[tileIndex]);
+            var position = new Vector3Int(x, y, 0);
+            _tilemap.SetTile(position, tiles[tileIndex]);
         }
-
+        
         public bool IsTileOccupied(int x, int y)
         {
             var position = new Vector3Int(x, y, 0);
             var tile = _tilemap.GetTile<Tile>(position);
             return tile is not null && tile.colliderType != Tile.ColliderType.None;
         }
-
+        
         public void SetRect(TileType tile, int x, int y, int width, int height)
         {
             for (var xi = 0; xi < width; xi++)

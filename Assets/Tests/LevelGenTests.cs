@@ -378,7 +378,7 @@ namespace Tests
                     Assert.IsTrue(map.IsTileOccupied(x, y));
                 }
             };
-            map.Generate(new GridWorldGenerator());
+            map.Generate();
         }
 
         // Tests "Map" and "GridWorldGenerator". Uses the riskiest-first method, for the same reasons as the previous test.
@@ -390,7 +390,7 @@ namespace Tests
             {
                 Assert.IsFalse(map.IsTileOccupied((int)data.StartPosition.x, (int)data.StartPosition.y));
             };
-            map.Generate(new GridWorldGenerator());
+            map.Generate();
         }
 
         // Tests "Map" and "GridWorldGenerator". Uses the riskiest-first method, for the same reasons as the previous test.
@@ -402,7 +402,7 @@ namespace Tests
             {
                 Assert.IsFalse(map.IsTileOccupied((int)data.EndPosition.x, (int)data.EndPosition.y));
             };
-            map.Generate(new GridWorldGenerator());
+            map.Generate();
         }
     }
 }

@@ -41,20 +41,30 @@ namespace LevelGeneration
         
         private Tilemap _tilemap;
         private IWorldGenerator _worldGenerator;
+        private Random _random;
 
         private void Start()
         {
+            _random = new Random();
+            
             Rooms.ValidateAllRooms();
 
-            Generate(new GridWorldGenerator());
+            _worldGenerator = new GridWorldGenerator();
+
+            Generate();
         }
 
-        public void Generate(IWorldGenerator worldGenerator)
+        public void Generate()
         {
             _tilemap = GetComponent<Tilemap>();
             
-            var levelLoadData = worldGenerator.Generate(new Random(), this, new Vector2Int(64, 64));
+            var levelLoadData = _worldGenerator.Generate(_random, this, new Vector2Int(64, 64));
             OnLoad?.Invoke(levelLoadData);
+        }
+
+        public LevelLoadData GetLastLoadData()
+        {
+            return _worldGenerator.GetLastLoadData();
         }
 
         public void SetTile(TileType tile, int x, int y)

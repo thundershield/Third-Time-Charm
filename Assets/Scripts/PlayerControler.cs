@@ -1,3 +1,5 @@
+using System;
+using LevelGeneration;
 using UnityEngine;
 
 public class PlayerControler : MonoBehaviour
@@ -12,6 +14,28 @@ public class PlayerControler : MonoBehaviour
     private float currentSpeed = 0;
     int direction = 2;        //Keeps track of what direction we are facing: 0 = Up, 1 = Right, 2 = Down, 3 = Left
 
+    private Map map;
+    private Vector2 endPosition;
+
+    private void Start()
+    {
+        map = GameObject.Find("TilemapGrid/Tilemap").GetComponent<Map>();
+        if (map is null) throw new NullReferenceException("Couldn't find the map!");
+        endPosition = map.GetLastLoadData().EndPosition;
+    }
+
+    private void CheckReachedEnd()
+    {
+        var position2d = new Vector2(transform.position.x, transform.position.y);
+        if (Vector2.Distance(position2d, endPosition) < 1.0f)
+        {
+            // The player has reached the end of the level, create a new map.
+            // The new map will create a new player, so destroy this one.
+            map.Generate();
+            Destroy(gameObject);
+        }
+    }
+
     void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal"); //Get the movement that the user is currently inputting
@@ -21,6 +45,8 @@ public class PlayerControler : MonoBehaviour
 
     private void FixedUpdate() //fixed updated doesn't rely on framerate, and is where you should actually apply movement systems
     {
+        CheckReachedEnd();
+        
         //if the player is inputting anything, then start accelerating in that direction. Not using the actuall acceleration system as that can be prone to velocity issues
         if (currentSpeed <= maxSpeed && movement.sqrMagnitude != 0){
             currentSpeed = currentSpeed + acceleration * Time.fixedDeltaTime;

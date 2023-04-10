@@ -28,6 +28,11 @@ namespace LevelGeneration
 
             return new LevelLoadData();
         }
+        
+        public LevelLoadData GetLastLoadData()
+        {
+            return new LevelLoadData();
+        }
 
         private void Ground(Random random, Map map, Vector2Int size)
         {

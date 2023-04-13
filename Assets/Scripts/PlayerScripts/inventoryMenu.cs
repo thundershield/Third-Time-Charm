@@ -64,8 +64,8 @@ using TMPro;
                 isOpen = false;
                 // Grid
                 GameObject grid = transform.Find("Grid").gameObject; 
-                for(int j = 0; j < 10; j++) {
-                    Transform tile = grid.transform.GetChild(10+j);
+                for(int j = 0; j < 6; j++) {
+                    Transform tile = grid.transform.GetChild(6+j);
                     tile.gameObject.GetComponent<Image>().enabled = false;
                     if(tile.childCount > 0) {
                         tile.GetChild(0).gameObject.GetComponent<Image>().enabled = false;
@@ -89,8 +89,8 @@ using TMPro;
             isOpen = true;
             // Grid
             GameObject grid = transform.Find("Grid").gameObject; 
-            for(int j = 0; j < 10; j++) {
-                Transform tile = grid.transform.GetChild(10+j);
+            for(int j = 0; j < 6; j++) {
+                Transform tile = grid.transform.GetChild(6+j);
                 tile.gameObject.GetComponent<Image>().enabled = true;
                 if(tile.childCount > 0) {
                     tile.GetChild(0).gameObject.GetComponent<Image>().enabled = true;

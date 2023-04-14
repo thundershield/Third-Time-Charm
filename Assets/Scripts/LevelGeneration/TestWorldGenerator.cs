@@ -1,11 +1,15 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Random = System.Random;
 
 namespace LevelGeneration
 {
     public class TestWorldGenerator : IWorldGenerator
     {
+        private static readonly Tile SandTile;
+        private static readonly Tile GrassTile;
+        
         private const int ChunkSize = 16;
 
         private enum HalfChunkType
@@ -77,7 +81,7 @@ namespace LevelGeneration
             var startY = halfChunkY * HalfChunkSize;
             var startX = halfChunkX * HalfChunkSize;
 
-            map.SetRect(TileType.Sand, startX, startY,
+            map.SetRect(SandTile, startX, startY,
                 HalfChunkSize, HalfChunkSize);
         }
 
@@ -90,7 +94,7 @@ namespace LevelGeneration
             var maxFloors = size.y / floorHeight;
             var floors = random.Next(1, maxFloors + 1);
 
-            map.SetRect(TileType.Grass, startX, startY, HalfChunkSize, HalfChunkSize);
+            map.SetRect(GrassTile, startX, startY, HalfChunkSize, HalfChunkSize);
         }
     }
 }

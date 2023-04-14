@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Random = System.Random;
 
 namespace LevelGeneration
@@ -13,10 +14,11 @@ namespace LevelGeneration
         
         public LevelLoadData Generate(Random random, Map map, Vector2Int size)
         {
+            var tileCategories = map.PickTileTheme(random).GetTileCategories();
             ClearRoomTypes();
             ChooseRooms(random);
-            GenerateBorder(random, map);
-            var enemyPositions = GenerateRooms(random, map);
+            GenerateBorder(random, map, tileCategories);
+            var enemyPositions = GenerateRooms(random, map, tileCategories);
 
             LastLoadData = new LevelLoadData
             {
@@ -54,10 +56,7 @@ namespace LevelGeneration
             { RoomType.AllOpenSpawn, 3 },
             { RoomType.AllOpenExit, 3 }
         };
-
-        private readonly TileType[] _borderTiles =
-            Map.TileCategories[TileCategory.Wall].Concat(Map.TileCategories[TileCategory.Plant]).ToArray();
-
+        
         private const int MapSize = 10;
         private const int MaxEnemiesPerRoom = 3;
         private const int RoomsPerEnemySpawn = 4;
@@ -145,7 +144,7 @@ namespace LevelGeneration
             return roomTemplates;
         }
 
-        private void GenerateRoomFromTemplate(Random random, Map map, RoomTemplate roomTemplate, List<Vector2> enemyPositions)
+        private void GenerateRoomFromTemplate(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories, RoomTemplate roomTemplate, List<Vector2> enemyPositions)
         {
             var roomX = roomTemplate.Position.x * RoomOverlappingWidth;
             var roomY = roomTemplate.Position.y * RoomOverlappingHeight;
@@ -154,16 +153,17 @@ namespace LevelGeneration
             {
                 var tileX = i % LevelGeneration.Rooms.RoomWidth;
                 var tileY = LevelGeneration.Rooms.RoomHeight - 1 - i / LevelGeneration.Rooms.RoomWidth;
-                var tile = Map.TileCategories[LevelGeneration.Rooms.CharCategories[roomTemplate.Room.Chars[i]]].Choose(random);
+                var tileCategory = LevelGeneration.Rooms.CharCategories[roomTemplate.Room.Chars[i]];
+                var tile = tileCategories[tileCategory].Choose(random);
                 var tilePosition = new Vector3Int(roomX + tileX, roomY + tileY, 0);
                 var centeredTilePosition = tilePosition + new Vector3(0.5f, 0.5f);
 
-                switch (tile)
+                switch (tileCategory)
                 {
-                    case TileType.Start:
+                    case TileCategory.Start:
                         StartPosition = centeredTilePosition;
                         break;
-                    case TileType.End:
+                    case TileCategory.End:
                         EndPosition = centeredTilePosition;
                         break;
                 }
@@ -177,30 +177,32 @@ namespace LevelGeneration
             AddRoomEnemyPosition(random, map, roomTemplate.Position.x, roomTemplate.Position.y, enemyPositions);
         }
 
-        private List<Vector2> GenerateRooms(Random random, Map map)
+        private List<Vector2> GenerateRooms(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
         {
             var enemyPositions = new List<Vector2>();
             var roomTemplates = GenerateRoomTemplates(random, map);
 
             foreach (var roomTemplate in roomTemplates[RoomCategory.Outdoor])
             {
-                GenerateRoomFromTemplate(random, map, roomTemplate, enemyPositions);
+                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, enemyPositions);
             }
             
             foreach (var roomTemplate in roomTemplates[RoomCategory.Indoor])
             {
-                GenerateRoomFromTemplate(random, map, roomTemplate, enemyPositions);
+                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, enemyPositions);
             }
 
             return enemyPositions;
         }
 
-        public void GenerateBorder(Random random, Map map)
+        public void GenerateBorder(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
         {
             const int mapWidth = MapSize * RoomOverlappingWidth + 1;
             const int mapHeight = MapSize * RoomOverlappingHeight + 1;
+        
+            var borderTiles = tileCategories[TileCategory.Wall].Concat(tileCategories[TileCategory.Plant]).ToArray();
 
-            var borderTile = _borderTiles.Choose(random);
+            var borderTile = borderTiles.Choose(random);
             map.SetRect(borderTile, -1, -1, mapWidth + 2, 1);
             map.SetRect(borderTile, -1, -1, 1, mapHeight + 2);
             map.SetRect(borderTile, -1, mapHeight, mapWidth + 2, 1);

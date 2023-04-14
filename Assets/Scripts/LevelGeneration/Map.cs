@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = System.Random;
@@ -8,33 +7,8 @@ namespace LevelGeneration
     [RequireComponent(typeof(Tilemap))]
     public class Map : MonoBehaviour
     {
-        [SerializeField] private Tile[] tiles;
+        [SerializeField] private TileTheme[] tileThemes;
         
-        public static readonly Dictionary<TileCategory, TileType[]> TileCategories = new()
-        {
-            { TileCategory.Ground, new[] { TileType.Grass, TileType.Path } },
-            { TileCategory.Start, new[] { TileType.Start } },
-            { TileCategory.End, new[] { TileType.End } },
-            { TileCategory.Plant, new[] { TileType.Bush, TileType.Tree } },
-            { TileCategory.Wall, new[] { TileType.Wall } },
-            { TileCategory.Floor, new[] { TileType.Floor } },
-            { TileCategory.IndoorDecor, new[]
-            {
-                TileType.Bin,
-                TileType.Bucket,
-                TileType.Cabinet,
-                TileType.ClosedBook,
-                TileType.DownChair,
-                TileType.Dresser,
-                TileType.Inkwell,
-                TileType.OpenBook,
-                TileType.RightChair,
-                TileType.Table
-            } },
-            { TileCategory.LockedDoor, new[] { TileType.LockedDoor }},
-            { TileCategory.OpenDoor, new[] { TileType.OpenDoor }}
-        };
-
         public delegate void LoadHandler(LevelLoadData levelLoadData);
 
         public event LoadHandler OnLoad;
@@ -67,11 +41,10 @@ namespace LevelGeneration
             return _worldGenerator.GetLastLoadData();
         }
 
-        public void SetTile(TileType tile, int x, int y)
+        public void SetTile(Tile tile, int x, int y)
         {
-            var tileIndex = (int)tile;
             var position = new Vector3Int(x, y, 0);
-            _tilemap.SetTile(position, tiles[tileIndex]);
+            _tilemap.SetTile(position, tile);
         }
         
         public bool IsTileOccupied(int x, int y)
@@ -81,11 +54,16 @@ namespace LevelGeneration
             return tile is not null && tile.colliderType != Tile.ColliderType.None;
         }
         
-        public void SetRect(TileType tile, int x, int y, int width, int height)
+        public void SetRect(Tile tile, int x, int y, int width, int height)
         {
             for (var xi = 0; xi < width; xi++)
             for (var yi = 0; yi < height; yi++)
                 SetTile(tile, x + xi, y + yi);
+        }
+
+        public TileTheme PickTileTheme(Random random)
+        {
+            return tileThemes.Choose(random);
         }
     }
 }

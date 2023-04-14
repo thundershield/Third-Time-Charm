@@ -3,6 +3,7 @@ using LevelGeneration;
 using NUnit.Framework;
 using UnityEngine;
 using Assert = NUnit.Framework.Assert;
+using Random = System.Random;
 
 namespace Tests
 {
@@ -182,48 +183,38 @@ namespace Tests
         public void IsOccupiedDetectsFullTile()
         {
             var map = GameObject.Find("TilemapGrid/Tilemap").GetComponent<Map>();
-            map.SetTile(TileType.Grass, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Dirt, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Sand, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Floor, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Path, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Inkwell, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.OpenBook, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.ClosedBook, 0, 0);
-            Assert.IsFalse(map.IsTileOccupied(0, 0));
+            var tileCategories = map.PickTileTheme(new Random()).GetTileCategories();
+
+            foreach (var tile in tileCategories[TileCategory.Floor])
+            {
+                map.SetTile(tile, 0, 0);
+                Assert.IsFalse(map.IsTileOccupied(0, 0));
+            }
+            
+            foreach (var tile in tileCategories[TileCategory.Ground])
+            {
+                map.SetTile(tile, 0, 0);
+                Assert.IsFalse(map.IsTileOccupied(0, 0));
+            }
         }
         
         [Test]
         public void IsOccupiedDoesNotDetectEmptyTile()
         {
             var map = GameObject.Find("TilemapGrid/Tilemap").GetComponent<Map>();
-            map.SetTile(TileType.Tree, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Wall, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Bush, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Bin, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Bucket, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Cabinet, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.DownChair, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Dresser, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.RightChair, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
-            map.SetTile(TileType.Table, 0, 0);
-            Assert.IsTrue(map.IsTileOccupied(0, 0));
+            var tileCategories = map.PickTileTheme(new Random()).GetTileCategories();
+
+            foreach (var tile in tileCategories[TileCategory.Wall])
+            {
+                map.SetTile(tile, 0, 0);
+                Assert.IsTrue(map.IsTileOccupied(0, 0));
+            }
+            
+            foreach (var tile in tileCategories[TileCategory.Plant])
+            {
+                map.SetTile(tile, 0, 0);
+                Assert.IsTrue(map.IsTileOccupied(0, 0));
+            }
         }
 
         /*

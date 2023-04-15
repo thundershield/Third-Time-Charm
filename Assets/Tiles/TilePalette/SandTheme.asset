@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f703291f7904fbb82ec117b317d961e, type: 3}
+  m_Name: SandTheme
+  m_EditorClassIdentifier: 
+  groundTiles:
+  - {fileID: 11400000, guid: 5700fcfe9d47a5347964cf69833e8674, type: 2}
+  - {fileID: 11400000, guid: 9eecd13e6d8997041b4a2dde3570ae83, type: 2}
+  startTiles:
+  - {fileID: 11400000, guid: b1c4132bedbdcef418356de7062d5ff2, type: 2}
+  endTiles:
+  - {fileID: 11400000, guid: 21b66daa6bac9064eb01e4a867d057ae, type: 2}
+  plantTiles:
+  - {fileID: 11400000, guid: cab03b0ca3e6e4c428650675c1a319aa, type: 2}
+  - {fileID: 11400000, guid: 062dc2f02ad5f8546ba524cc2b3bf939, type: 2}
+  wallTiles:
+  - {fileID: 11400000, guid: cde847295437da246865d0ca26b50159, type: 2}
+  floorTiles:
+  - {fileID: 11400000, guid: e12fd0c72ae23d544901f06d9786c5fd, type: 2}
+  indoorDecorTiles:
+  - {fileID: 11400000, guid: 589eac9d1f765db448bd20774c3f8ceb, type: 2}
+  - {fileID: 11400000, guid: 1469838b954e3454395dad53745017ff, type: 2}
+  - {fileID: 11400000, guid: 171c0b1032bdf0844bf464f857908d6d, type: 2}
+  - {fileID: 11400000, guid: 462ce5ed9e62361428dea45895efad97, type: 2}
+  - {fileID: 11400000, guid: 7d894b32e23274f43b6a42ea3bebea67, type: 2}
+  - {fileID: 11400000, guid: 0e9c9412588f62243a2062f92056fabc, type: 2}
+  - {fileID: 11400000, guid: b64d42b73832fa0479f69fa7f108ec03, type: 2}
+  - {fileID: 11400000, guid: bd326cbb6ec059640a1995de5f2d4ca2, type: 2}
+  - {fileID: 11400000, guid: 44ac5979cfef3244b8d7399f07f753f1, type: 2}
+  - {fileID: 11400000, guid: 65bd3d7b5adbdd242afd03e6dd55d3f0, type: 2}
+  lockedDoorTiles:
+  - {fileID: 11400000, guid: 6d65e56d6ad72ab4398dafba03e93f53, type: 2}
+  openDoorTiles:
+  - {fileID: 11400000, guid: 18e6de2f88bb1894c83a241d6f483f1f, type: 2}

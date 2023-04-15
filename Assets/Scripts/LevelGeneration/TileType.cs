@@ -24,6 +24,8 @@
         Inkwell = 19,
         OpenBook = 20,
         RightChair = 21,
-        Table = 22
+        Table = 22,
+        LockedDoor = 23,
+        OpenDoor = 24
     }
 }

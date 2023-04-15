@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f703291f7904fbb82ec117b317d961e, type: 3}
+  m_Name: MineTheme
+  m_EditorClassIdentifier: 
+  groundTiles:
+  - {fileID: 11400000, guid: c24505d0a8db1354fa57da02bd2adb9e, type: 2}
+  startTiles:
+  - {fileID: 11400000, guid: b1c4132bedbdcef418356de7062d5ff2, type: 2}
+  endTiles:
+  - {fileID: 11400000, guid: 21b66daa6bac9064eb01e4a867d057ae, type: 2}
+  plantTiles:
+  - {fileID: 11400000, guid: 9146be913e3f4f647ba556d567e43a60, type: 2}
+  - {fileID: 11400000, guid: 1da0872625c8cd84090b92c19097e469, type: 2}
+  - {fileID: 11400000, guid: dc91b823d950c1041bdddce06f46c210, type: 2}
+  - {fileID: 11400000, guid: 384179160d5e32140967d3d9bc4cb82a, type: 2}
+  wallTiles:
+  - {fileID: 11400000, guid: 8e43d23e618a214448fc3a96894a826a, type: 2}
+  floorTiles:
+  - {fileID: 11400000, guid: aed738ae78611234c8ae5e20d5c94893, type: 2}
+  indoorDecorTiles:
+  - {fileID: 11400000, guid: 80d8053a52a6e1442b6ddcab683fc7b5, type: 2}
+  - {fileID: 11400000, guid: 32b52e5e3906c8b4d9cc0afa877eaa73, type: 2}
+  - {fileID: 11400000, guid: 50acc3aed1a748840b7f3dfc5dfa5557, type: 2}
+  - {fileID: 11400000, guid: 18119f134477ca1428289eb3cc4b285c, type: 2}
+  - {fileID: 11400000, guid: 5186700d0fa176145a39e21559612145, type: 2}
+  - {fileID: 11400000, guid: 03bf475cb3be29d4791be1824389c8c4, type: 2}
+  - {fileID: 11400000, guid: 749e55bef9645e645b999f84dad1dfb5, type: 2}
+  - {fileID: 11400000, guid: 7eed1ac85c2a8134095bb9076f1466f3, type: 2}
+  - {fileID: 11400000, guid: c16a9b3a2cab115499e82b3af8f2bcc7, type: 2}
+  - {fileID: 11400000, guid: 10b8ac05a47fe214095906166d869bcd, type: 2}
+  lockedDoorTiles:
+  - {fileID: 11400000, guid: df6620c3ad4e5c74f829a5e2fd8dab58, type: 2}
+  openDoorTiles:
+  - {fileID: 11400000, guid: 9816d90fffb266e49b859ae2370a71ec, type: 2}

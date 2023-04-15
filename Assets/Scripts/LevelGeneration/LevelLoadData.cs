@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace LevelGeneration
 {
@@ -6,5 +7,7 @@ namespace LevelGeneration
     {
         public Vector2 StartPosition;
         public Vector2 EndPosition;
+        public List<Vector2> EnemyPositions;
+        public Vector2Int Size;
     }
 }

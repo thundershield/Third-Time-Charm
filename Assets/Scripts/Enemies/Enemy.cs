@@ -11,6 +11,7 @@ namespace Enemies
         private const float FrameLength = 0.2f;
         private const float DirectionChangeTime = 1.5f;
         private const float MoveSpeed = 2.0f;
+        private const int MaxHealth = 50;
 
         private static readonly Random Random = new();
         
@@ -25,6 +26,7 @@ namespace Enemies
         private Direction _direction;
         private Vector2 _directionVec;
         private Rigidbody2D _rigidbody2D;
+        private int _health = MaxHealth;
         
         private void Start()
         {
@@ -76,6 +78,16 @@ namespace Enemies
                 Direction.Right => walkRightSprites,
                 _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
+        }
+
+        public void TakeDamage(int damage)
+        {
+            _health -= damage;
+
+            if (_health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

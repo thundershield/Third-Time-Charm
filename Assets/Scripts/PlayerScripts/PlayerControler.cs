@@ -1,19 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Enemies;
 using LevelGeneration;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 
 public class PlayerControler : MonoBehaviour
 {
     private const float InvincibilityTime = 0.5f;
+    private const float AttackTime = 0.30f;
     
     public int health = 100;
     public int armor = 0;
     public int speed = 0;
+    public int damage = 10;
     private float invincibilityTimer;
+    private float attackTimer;
 
     public float maxSpeed = 5f; //This is the maximum speed the character can go
     public float acceleration = 5f; //how fast we accelerate to max speed. To find out how long it takes you to accelerate, simply divide maxSpeed by acceleration. That is how long is seconds it takes
@@ -24,7 +29,8 @@ public class PlayerControler : MonoBehaviour
 
     private Vector2 movement; //the direction the player is moving in
     private float currentSpeed = 0;
-    int direction = 2;        //Keeps track of what direction we are facing: 0 = Up, 1 = Right, 2 = Down, 3 = Left
+    int directionX = 0;
+    int directionY = -1;
 
     void OnTriggerEnter2D(Collider2D other)
     {   
@@ -111,9 +117,55 @@ public class PlayerControler : MonoBehaviour
                 }
             }
         }
+        
+        if (attackTimer <= 0f && Input.GetButton("Fire1"))
+        {
+            animator.Play("Attack");
+            attackTimer = AttackTime;
+            rb.velocity = Vector2.zero;
+            movement = Vector2.zero;
+            
+            // Attack anything in front of the player:
+            var directionVec = new Vector2(directionX, directionY);
+            var hitResults = new List<Collider2D>();
+            var hitFilter = new ContactFilter2D().NoFilter();
+            Physics2D.OverlapBox((Vector2)transform.position + directionVec, Vector2.one, 0f, hitFilter, hitResults);
+
+            foreach (var result in hitResults)
+            {
+                if (!result.CompareTag("Enemy")) return;
+
+                result.GetComponent<Enemy>().TakeDamage(damage);
+            }
+        }
+        
+        if (attackTimer > 0f)
+        {
+            attackTimer -= Time.deltaTime;
+
+            // Don't continue and let the player move while attacking.
+            return;
+        }
+        
+        // Runs only if the player is not attacking:
 
         movement.x = Input.GetAxisRaw("Horizontal"); //Get the movement that the user is currently inputting
         movement.y = Input.GetAxisRaw("Vertical");
+        if (movement.x != 0f || movement.y != 0f)
+        {
+            directionX = movement.x switch
+            {
+                < 0 => -1,
+                > 0 => 1,
+                _ => 0
+            };
+            directionY = movement.y switch
+            {
+                < 0 => -1,
+                > 0 => 1,
+                _ => 0
+            };
+        }
         movement.Normalize(); //Normalize the result so the vector has a magnitude of 1, regardless of the exact values. This allows for easy tracking of direction
     }
 
@@ -127,15 +179,6 @@ public class PlayerControler : MonoBehaviour
             if(currentSpeed > maxSpeed) {
                 currentSpeed = maxSpeed;
             }
-            //if the movement in the X direction is greater or equal to the movement in the y direction, the point the character along the x direction
-            if(Mathf.Abs(movement.x) >= Mathf.Abs(movement.y)){
-                //Mathf.Sign will return either -1 or 1, giving us either 1 or 3 for the direction, exactly what we want
-                //We subtract instead of add because of how the coordinate field and our defined directions interact
-                direction = 2 - (int)Mathf.Sign(movement.x);
-            }else{
-                //Same as above, only with an offset of 1 instead of 2
-                direction = 1 - (int)Mathf.Sign(movement.y);
-            }
         }
         else if (currentSpeed > 0){
             currentSpeed = 0;
@@ -143,7 +186,9 @@ public class PlayerControler : MonoBehaviour
         //move the player by there current speed, with Time.fixedDeltaTime making sure movement is consistent
         rb.MovePosition(rb.position + movement * currentSpeed * Time.fixedDeltaTime);
         animator.SetFloat("Speed",currentSpeed);
-        animator.SetInteger("Direction",direction);
+        
+        animator.SetFloat("DirectionX",directionX);
+        animator.SetFloat("DirectionY",directionY);
     }
 
     public void TakeDamage(int damage)

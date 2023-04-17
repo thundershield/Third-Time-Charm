@@ -12,6 +12,7 @@ public class PlayerControler : MonoBehaviour
 {
     private const float InvincibilityTime = 0.5f;
     private const float AttackTime = 0.30f;
+    private const float AttackHitboxSize = 1f;
     
     public int health = 100;
     public int armor = 0;
@@ -129,11 +130,11 @@ public class PlayerControler : MonoBehaviour
             var directionVec = new Vector2(directionX, directionY);
             var hitResults = new List<Collider2D>();
             var hitFilter = new ContactFilter2D().NoFilter();
-            Physics2D.OverlapBox((Vector2)transform.position + directionVec, Vector2.one, 0f, hitFilter, hitResults);
+            Physics2D.OverlapBox((Vector2)transform.position + directionVec, Vector2.one * AttackHitboxSize, 0f, hitFilter, hitResults);
 
             foreach (var result in hitResults)
             {
-                if (!result.CompareTag("Enemy")) return;
+                if (!result.CompareTag("Enemy")) continue;
 
                 result.GetComponent<Enemy>().TakeDamage(damage);
             }

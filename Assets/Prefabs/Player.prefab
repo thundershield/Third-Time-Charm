@@ -105,6 +105,7 @@ MonoBehaviour:
   health: 100
   armor: 0
   speed: 0
+  damage: 10
   maxSpeed: 5
   acceleration: 20
   rb: {fileID: 8477082620076235730}

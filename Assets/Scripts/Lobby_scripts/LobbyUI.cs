@@ -8,16 +8,17 @@ using UnityEngine.UI;
 
 public class LobbyUI : MonoBehaviour 
 {
+    static int check=2;
     public static LobbyUI Instance { get; private set; }
     [SerializeField] private Transform playerSingleTemplate;
     [SerializeField] private Transform container;
     [SerializeField] private TextMeshProUGUI lobbyNameText;
     [SerializeField] private TextMeshProUGUI playerCountText;
     [SerializeField] private Button leaveLobbyButton;
+    [SerializeField] private Button StartLobbyButton;
     private void Awake() 
     {
         Instance = this;
-
         playerSingleTemplate.gameObject.SetActive(false);
         leaveLobbyButton.onClick.AddListener(() => 
         {
@@ -25,12 +26,11 @@ public class LobbyUI : MonoBehaviour
         });
     }
     private void Start() 
-    {
+    {   
         LobbyManager.Instance.OnJoinedLobby += UpdateLobby_Event;
         LobbyManager.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
         LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
         LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnLeftLobby;
-
         Hide();
     }
     private void LobbyManager_OnLeftLobby(object sender, System.EventArgs e) 

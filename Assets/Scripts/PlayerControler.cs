@@ -1,8 +1,9 @@
 using System;
 using LevelGeneration;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerControler : MonoBehaviour
+public class PlayerControler : NetworkBehaviour
 {
 
     public float maxSpeed = 5f; //This is the maximum speed the character can go

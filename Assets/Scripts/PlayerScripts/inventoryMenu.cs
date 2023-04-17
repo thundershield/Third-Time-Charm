@@ -244,7 +244,6 @@ using TMPro;
             itemPopup.ForceUpdateRectTransforms();
 
             transform.Find("DropButton").gameObject.SetActive(true);
-            // itemPopup.position = selected.transform.position + new Vector3(220,45-(itemPopup.rect.height/2),0);
         }
 
         public void deselectItem() {

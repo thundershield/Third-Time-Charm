@@ -53,15 +53,20 @@ public class PlayerControler : MonoBehaviour
         endPosition = map.GetLastLoadData().EndPosition;
     }
 
+    private void RestartLevel()
+    {
+        // Regenerating the map also destroys all enemies in the map.
+        // So restarting the level just requires regenerating the map.
+        map.Generate();
+    }
+
     private void CheckReachedEnd()
     {
         var position2d = new Vector2(transform.position.x, transform.position.y);
         if (Vector2.Distance(position2d, endPosition) < 1.0f)
         {
             // The player has reached the end of the level, create a new map.
-            // The new map will create a new player, so destroy this one.
-            map.Generate();
-            Destroy(gameObject);
+            RestartLevel();
         }
     }
 
@@ -132,6 +137,15 @@ public class PlayerControler : MonoBehaviour
         rb.MovePosition(rb.position + movement * currentSpeed * Time.fixedDeltaTime);
         animator.SetFloat("Speed",currentSpeed);
         animator.SetInteger("Direction",direction);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+
+        if (health > 0) return;
+        
+        RestartLevel();
     }
 }
  

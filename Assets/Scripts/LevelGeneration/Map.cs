@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = System.Random;
@@ -16,6 +17,7 @@ namespace LevelGeneration
         private Tilemap _tilemap;
         private IWorldGenerator _worldGenerator;
         private Random _random;
+        private List<GameObject> _spawnedObjects;
 
         private void Start()
         {
@@ -23,6 +25,7 @@ namespace LevelGeneration
             
             Rooms.ValidateAllRooms();
 
+            _spawnedObjects = new List<GameObject>();
             _worldGenerator = new GridWorldGenerator();
 
             Generate();
@@ -31,6 +34,15 @@ namespace LevelGeneration
         public void Generate()
         {
             _tilemap = GetComponent<Tilemap>();
+
+            foreach (var spawnedObject in _spawnedObjects)
+            {
+                if (!spawnedObject) continue;
+                
+                Destroy(spawnedObject);
+            }
+            
+            _spawnedObjects.Clear();
             
             var levelLoadData = _worldGenerator.Generate(_random, this, new Vector2Int(64, 64));
             OnLoad?.Invoke(levelLoadData);
@@ -64,6 +76,12 @@ namespace LevelGeneration
         public TileTheme PickTileTheme(Random random)
         {
             return tileThemes.Choose(random);
+        }
+
+        public void SpawnObject(GameObject gameObject, Vector2 position)
+        {
+            var newObject = Instantiate(gameObject, position, Quaternion.identity);
+            _spawnedObjects.Add(newObject);
         }
     }
 }

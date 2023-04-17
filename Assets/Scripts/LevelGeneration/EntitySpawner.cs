@@ -6,6 +6,7 @@ namespace LevelGeneration
     public class EntitySpawner : MonoBehaviour
     {
         [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject[] enemyPrefabs;
         private Map _map;
     
         private void Start()
@@ -16,9 +17,15 @@ namespace LevelGeneration
 
         private void LevelLoadHandler(LevelLoadData levelLoadData)
         {
-            GameObject player = Instantiate(playerPrefab, levelLoadData.StartPosition, Quaternion.identity);
-            GameObject playerInventory = GameObject.FindGameObjectsWithTag("Inventory")[0];
-            player.GetComponent<PlayerControler>().playerInventory = playerInventory.GetComponent<inventory>();
+            _map.SpawnObject(playerPrefab, levelLoadData.StartPosition);
+
+            foreach (var enemyPosition in levelLoadData.EnemyPositions)
+            {
+                // Pick an enemy based on the position's associated spawn data.
+                // This is necessary to make sure that the level is reproducible based on a seed.
+                var enemy = enemyPrefabs[enemyPosition.SpawnData % enemyPrefabs.Length];
+                _map.SpawnObject(enemy, enemyPosition.Position);
+            }
         }
     }
 }

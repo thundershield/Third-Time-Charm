@@ -63,8 +63,12 @@ using TMPro;
             closeInventory();
         }
 
-        public void updateStatWindow() {
-            PlayerControler player = GameObject.Find("Player(Clone)").GetComponent<PlayerControler>();
+        public void updateStatWindow(PlayerControler player = null) {
+            if (player == null)
+            {
+                player = GameObject.Find("Player(Clone)").GetComponent<PlayerControler>();
+            }
+
             TextMeshProUGUI health = transform.Find("PlayerStats/health").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI armor = transform.Find("PlayerStats/armor").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI speed = transform.Find("PlayerStats/speed").GetComponent<TextMeshProUGUI>();
@@ -100,7 +104,7 @@ using TMPro;
 
         public void closeInventory() {
             transform.Find("Background").localScale -= new Vector3(0.0f,0.77f,0.0f); 
-            transform.Find("Background").position += new Vector3(0.0f,215f,0.0f); 
+            transform.Find("Background").position += new Vector3(0.0f,215f*0.45f,0.0f); 
 
             isOpen = false;
             // Grid
@@ -140,7 +144,7 @@ using TMPro;
 
         public void openInventory() {
             transform.Find("Background").localScale += new Vector3(0.0f,0.77f,0.0f); 
-            transform.Find("Background").position -= new Vector3(0.0f,215f,0.0f); 
+            transform.Find("Background").position -= new Vector3(0.0f,215f*0.45f,0.0f); 
 
             isOpen = true;
             // Grid
@@ -244,7 +248,6 @@ using TMPro;
             itemPopup.ForceUpdateRectTransforms();
 
             transform.Find("DropButton").gameObject.SetActive(true);
-            // itemPopup.position = selected.transform.position + new Vector3(220,45-(itemPopup.rect.height/2),0);
         }
 
         public void deselectItem() {

@@ -232,6 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 8477082620076235727, guid: 2916efbe9d9772445beb65c094bc0dea, type: 3}
+  enemyPrefabs:
+  - {fileID: 4066378823516231430, guid: eb7b1c24405c01348afbb2bf27df6d78, type: 3}
 --- !u!19719996 &3224470926865221657
 TilemapCollider2D:
   m_ObjectHideFlags: 0

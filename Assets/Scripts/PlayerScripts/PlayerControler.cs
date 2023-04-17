@@ -45,6 +45,8 @@ public class PlayerControler : MonoBehaviour
         map = GameObject.Find("TilemapGrid/Tilemap").GetComponent<Map>();
         if (map is null) throw new NullReferenceException("Couldn't find the map!");
         endPosition = map.GetLastLoadData().EndPosition;
+        var playerInventoryObject = GameObject.FindGameObjectWithTag("Inventory");
+        playerInventory = playerInventoryObject.GetComponent<inventory>();
     }
 
     private void CheckReachedEnd()

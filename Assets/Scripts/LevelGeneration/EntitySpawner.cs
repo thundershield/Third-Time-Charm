@@ -16,9 +16,7 @@ namespace LevelGeneration
 
         private void LevelLoadHandler(LevelLoadData levelLoadData)
         {
-            GameObject player = Instantiate(playerPrefab, levelLoadData.StartPosition, Quaternion.identity);
-            GameObject playerInventory = GameObject.FindGameObjectsWithTag("Inventory")[0];
-            player.GetComponent<PlayerControler>().playerInventory = playerInventory.GetComponent<inventory>();
+            Instantiate(playerPrefab, levelLoadData.StartPosition, Quaternion.identity);
         }
     }
 }

@@ -40,6 +40,12 @@ public class PlayerControler : MonoBehaviour
         acceleration = 5f + stats.speed/5;
     }
 
+    private void Awake()
+    {
+        var playerInventoryObject = GameObject.FindGameObjectWithTag("Inventory");
+        playerInventory = playerInventoryObject.GetComponent<inventory>();
+    }
+
     private void Start()
     {
         map = GameObject.Find("TilemapGrid/Tilemap").GetComponent<Map>();

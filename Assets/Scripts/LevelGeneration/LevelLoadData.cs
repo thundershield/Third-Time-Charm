@@ -7,7 +7,7 @@ namespace LevelGeneration
     {
         public Vector2 StartPosition;
         public Vector2 EndPosition;
-        public List<Vector2> EnemyPositions;
+        public List<SpawnPosition> EnemyPositions;
         public Vector2Int Size;
     }
 }

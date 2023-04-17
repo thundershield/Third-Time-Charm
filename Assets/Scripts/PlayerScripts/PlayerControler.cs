@@ -8,9 +8,12 @@ using TMPro;
 
 public class PlayerControler : MonoBehaviour
 {
+    private const float InvincibilityTime = 0.5f;
+    
     public int health = 100;
     public int armor = 0;
     public int speed = 0;
+    private float invincibilityTimer;
 
     public float maxSpeed = 5f; //This is the maximum speed the character can go
     public float acceleration = 5f; //how fast we accelerate to max speed. To find out how long it takes you to accelerate, simply divide maxSpeed by acceleration. That is how long is seconds it takes
@@ -44,6 +47,7 @@ public class PlayerControler : MonoBehaviour
     {
         var playerInventoryObject = GameObject.FindGameObjectWithTag("Inventory");
         playerInventory = playerInventoryObject.GetComponent<inventory>();
+        playerInventory.mainInventory.updateStatWindow(this);
     }
 
     private void Start()
@@ -82,6 +86,8 @@ public class PlayerControler : MonoBehaviour
 
     void Update()
     {
+        invincibilityTimer -= Time.deltaTime;
+        
         Collider2D coll = GetComponent<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
         List<Collider2D> results = new List<Collider2D>();
@@ -141,10 +147,14 @@ public class PlayerControler : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (invincibilityTimer > 0f) return;
+
+        invincibilityTimer = InvincibilityTime;
         health -= damage;
+        playerInventory.mainInventory.updateStatWindow();
 
         if (health > 0) return;
-        
+
         RestartLevel();
     }
 }

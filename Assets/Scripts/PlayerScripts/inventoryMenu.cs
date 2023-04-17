@@ -63,8 +63,12 @@ using TMPro;
             closeInventory();
         }
 
-        public void updateStatWindow() {
-            PlayerControler player = GameObject.Find("Player(Clone)").GetComponent<PlayerControler>();
+        public void updateStatWindow(PlayerControler player = null) {
+            if (player == null)
+            {
+                player = GameObject.Find("Player(Clone)").GetComponent<PlayerControler>();
+            }
+
             TextMeshProUGUI health = transform.Find("PlayerStats/health").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI armor = transform.Find("PlayerStats/armor").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI speed = transform.Find("PlayerStats/speed").GetComponent<TextMeshProUGUI>();

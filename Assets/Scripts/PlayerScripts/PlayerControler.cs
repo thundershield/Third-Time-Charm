@@ -90,6 +90,7 @@ public class PlayerControler : MonoBehaviour
         
         Collider2D coll = GetComponent<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
+        filter.SetLayerMask(LayerMask.GetMask("Item"));
         List<Collider2D> results = new List<Collider2D>();
         int num = Physics2D.OverlapCollider(coll,filter,results);
 

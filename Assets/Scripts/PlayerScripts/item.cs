@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 // namespace inventoryClass {
 	public class item: MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler {
@@ -11,12 +13,19 @@ using UnityEngine.EventSystems;
 		private inventoryMenu inventory;
 		[HideInInspector] public Transform finalPosition;
 		public int itemId;
+		public bool statItem;
 
 		void Awake() {
 			inventory = GameObject.FindGameObjectsWithTag("Inventory")[0].transform.parent.GetComponent<inventoryMenu>();
 		}
 
+		public void updateItem(int newId) {
+			itemInfo info = inventory.queryItem(newId);
+			itemId = newId;
+		}
+
 		public void OnBeginDrag(PointerEventData eventData) {
+			if(statItem) { return; }
 			if(inventory.selected != null) {
 		        	inventory.selected.GetComponent<Image>().color = new Color32(140,140,140,255);
 		        	inventory.selected = null;
@@ -30,10 +39,12 @@ using UnityEngine.EventSystems;
 		}
 		
 		public void OnDrag(PointerEventData eventData) {
+			if(statItem) { return; }
 			transform.position = Input.mousePosition;
 		}
 
 		public void OnEndDrag(PointerEventData eventData) {
+			if(statItem) { return; }
 			transform.SetParent(finalPosition);
 			image.raycastTarget = true;
 		}
@@ -46,12 +57,21 @@ using UnityEngine.EventSystems;
 	    {	
 	    	inventory.clickingItem = false;
 	    	if(!pointerEventData.dragging && inventory.isOpen) {
-		        //Output the name of the GameObject that is being clicked
 		        if(inventory.selected != null) {
-		        	inventory.selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+		        	if(!statItem) {
+			        	inventory.selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+			        }
+			        else {
+			        	inventory.selected.GetComponent<Image>().color = new Color32(212,212,212,255);	
+			        }
 		        }
 		        if(inventory.selected == transform.parent.gameObject) {
+		        	if(!statItem) {
 		        	inventory.selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+		        	}
+		        	else {
+		        		inventory.selected.GetComponent<Image>().color = new Color32(212,212,212,255);	
+		        	}
 		        	inventory.selected = null;
                     inventory.deselectItem();
 		        }

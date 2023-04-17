@@ -6,15 +6,20 @@ using TMPro;
 
 // namespace inventoryClass {
     public struct itemInfo {
-            public int id;
-            public string name;
-            public string flavorText;
-            public string statDescriptiom;
-            public string itemType;
-            public string statType;
-            public int statAmount;
-            public string sprite;
+        public int id;
+        public string name;
+        public string flavorText;
+        public string statDescriptiom;
+        public string itemType;
+        public string statType;
+        public int statAmount;
+        public string sprite;
     };
+
+    public struct statBlock {
+        public int speed;
+        public int armor;
+    }
 
     public class inventoryMenu : MonoBehaviour {
 
@@ -31,6 +36,7 @@ using TMPro;
         }
 
         public GameObject selected;
+        public GameObject itemPrefab;
 
         public void Awake() {
             TextAsset dataset = Resources.Load<TextAsset>("items");
@@ -57,29 +63,79 @@ using TMPro;
             closeInventory();
         }
 
-        public void closeInventory() {
-            transform.Find("Background").localScale -= new Vector3(0.0f,0.77f,0.0f); 
-                transform.Find("Background").position += new Vector3(0.0f,215f,0.0f); 
+        public void updateStatWindow() {
+            PlayerControler player = GameObject.Find("Player(Clone)").GetComponent<PlayerControler>();
+            TextMeshProUGUI health = transform.Find("PlayerStats/health").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI armor = transform.Find("PlayerStats/armor").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI speed = transform.Find("PlayerStats/speed").GetComponent<TextMeshProUGUI>();
 
-                isOpen = false;
-                // Grid
-                GameObject grid = transform.Find("Grid").gameObject; 
-                for(int j = 0; j < 6; j++) {
-                    Transform tile = grid.transform.GetChild(6+j);
-                    tile.gameObject.GetComponent<Image>().enabled = false;
-                    if(tile.childCount > 0) {
-                        tile.GetChild(0).gameObject.GetComponent<Image>().enabled = false;
+            health.text = "Health: " + player.health.ToString();
+            armor.text = "Armor: " + player.armor.ToString();
+            speed.text = "Speed: " + player.speed.ToString();
+        }
+
+        public void updateStats() {
+            statBlock playerStats;
+            playerStats.armor = 0;
+            playerStats.speed = 0;
+
+            GameObject statGrid = transform.Find("StatObjects").gameObject; 
+            for(int j = 0; j < 20; j++) {
+                Transform tile = statGrid.transform.GetChild(j);
+                tile.gameObject.GetComponent<Image>().enabled = false;
+                if(tile.childCount > 0) {
+                    int itemId = tile.GetChild(0).gameObject.GetComponent<item>().itemId;
+                    itemInfo item = queryItem(itemId);
+                    if(item.statType == "defense") {
+                        playerStats.armor += item.statAmount;
+                    }
+                    else if(item.statType == "speed") {
+                        playerStats.speed += item.statAmount;
                     }
                 }
+            }
+            GameObject player = GameObject.Find("Player(Clone)");
+            player.GetComponent<PlayerControler>().updateStats(playerStats);
+        }
 
-                transform.Find("StatObjects").gameObject.SetActive(false);
-                transform.Find("PlayerStats").gameObject.SetActive(false);
+        public void closeInventory() {
+            transform.Find("Background").localScale -= new Vector3(0.0f,0.77f,0.0f); 
+            transform.Find("Background").position += new Vector3(0.0f,215f,0.0f); 
 
-                if(selected != null) {
-                    selected.GetComponent<Image>().color = new Color32(140,140,140,255);
-                    selected = null;
-                    deselectItem();
+            isOpen = false;
+            // Grid
+            GameObject grid = transform.Find("Grid").gameObject; 
+            for(int j = 0; j < 6; j++) {
+                Transform tile = grid.transform.GetChild(6+j);
+                tile.gameObject.GetComponent<Image>().enabled = false;
+                if(tile.childCount > 0) {
+                    tile.GetChild(0).gameObject.GetComponent<Image>().enabled = false;
                 }
+            }
+
+            GameObject statGrid = transform.Find("StatObjects").gameObject; 
+            statGrid.GetComponent<Image>().enabled = false;
+            for(int j = 0; j < 20; j++) {
+                Transform tile = statGrid.transform.GetChild(j);
+                tile.gameObject.GetComponent<Image>().enabled = false;
+                if(tile.childCount > 0) {
+                    tile.GetChild(0).gameObject.GetComponent<Image>().enabled = false;
+                }
+            }
+
+            transform.Find("DropButton").gameObject.SetActive(false);
+            transform.Find("PlayerStats").gameObject.SetActive(false);
+
+            if(selected != null) {
+                if(!selected.transform.GetChild(0).gameObject.GetComponent<item>().statItem) {
+                    selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+                }
+                else {
+                    selected.GetComponent<Image>().color = new Color32(212,212,212,255);
+                }   
+                selected = null;
+                deselectItem();
+            }
         }
 
         public void openInventory() {
@@ -98,10 +154,18 @@ using TMPro;
             }
 
             // Stat Objects
-            transform.Find("StatObjects").gameObject.SetActive(true);
+            GameObject statGrid = transform.Find("StatObjects").gameObject; 
+            statGrid.GetComponent<Image>().enabled = true;
+            for(int j = 0; j < 20; j++) {
+                Transform tile = statGrid.transform.GetChild(j);
+                tile.gameObject.GetComponent<Image>().enabled = true;
+                if(tile.childCount > 0) {
+                    tile.GetChild(0).gameObject.GetComponent<Image>().enabled = true;
+                }
+            }
 
-            //
             transform.Find("PlayerStats").gameObject.SetActive(true);
+            updateStatWindow();
         }
 
         public void rotateInventory() {
@@ -142,12 +206,20 @@ using TMPro;
                 openInventory();
             }
             if(Input.GetMouseButtonDown(0) && selected != null && !clickingItem) {
-                selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+                if(!selected.transform.GetChild(0).gameObject.GetComponent<item>().statItem) {
+                    selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+                }
+                else {
+                    selected.GetComponent<Image>().color = new Color32(212,212,212,255);  
+                }
                 selected = null;
                 deselectItem();
             }
-            else if(Input.GetKeyDown(KeyCode.Q) && !isOpen) {
+            if(Input.GetKeyDown(KeyCode.Q) && !isOpen) {
                 rotateInventory();
+            }
+            if(Input.GetKeyDown(KeyCode.V)) {
+                dropItem();
             }
         }
 
@@ -171,12 +243,36 @@ using TMPro;
             itemPopup.gameObject.GetComponent<ContentSizeFitter>().enabled = true;
             itemPopup.ForceUpdateRectTransforms();
 
+            transform.Find("DropButton").gameObject.SetActive(true);
             // itemPopup.position = selected.transform.position + new Vector3(220,45-(itemPopup.rect.height/2),0);
         }
 
         public void deselectItem() {
             Transform itemPopup = transform.Find("itemPopup");
             itemPopup.gameObject.SetActive(false);
+            transform.Find("DropButton").gameObject.SetActive(false);
+        }
+
+        public void dropItem() {
+            if(selected != null) {
+                Destroy(selected.transform.GetChild(0).gameObject);
+
+                item selectedItem = selected.transform.GetChild(0).GetComponent<item>();
+                if(!selected.transform.GetChild(0).gameObject.GetComponent<item>().statItem) {
+                    selected.GetComponent<Image>().color = new Color32(140,140,140,255);
+                }
+                else {
+                    selected.GetComponent<Image>().color = new Color32(212,212,212,255);   
+                }
+                selected = null;
+                deselectItem();
+
+                Transform playerPosition = GameObject.Find("Player(Clone)").transform;
+                GameObject item = Instantiate(itemPrefab, playerPosition.position, Quaternion.identity);
+                item.GetComponent<itemObject>().updateItem(selectedItem.itemId);
+
+                updateStats();
+            }
         }
     }
 // }

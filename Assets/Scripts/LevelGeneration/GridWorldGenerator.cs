@@ -98,7 +98,7 @@ namespace LevelGeneration
             return Rooms[x + y * MapSize];
         }
         
-        private void AddRoomEnemyPosition(Random random, Map map, int roomX, int roomY, List<Vector2> enemyPositions)
+        private void AddRoomEnemyPosition(Random random, Map map, int roomX, int roomY, List<SpawnPosition> enemyPositions)
         {
             if (random.Next(RoomsPerEnemySpawn) != 0) return;
 
@@ -106,12 +106,18 @@ namespace LevelGeneration
 
             for (var i = 0; i < enemyCount; i++)
             {
-                var enemyX = roomX * LevelGeneration.Rooms.RoomWidth + random.Next(LevelGeneration.Rooms.RoomWidth);
-                var enemyY = roomY * LevelGeneration.Rooms.RoomHeight + random.Next(LevelGeneration.Rooms.RoomHeight);
+                // Place the enemy anywhere on the interior of the room, don't put on enemy on the edges.
+                // Edges could later be replace by walls when neighboring rooms are generated.
+                var enemyX = roomX * RoomOverlappingWidth + 1 + random.Next(RoomOverlappingWidth - 2);
+                var enemyY = roomY * RoomOverlappingHeight + 1 + random.Next(RoomOverlappingHeight - 2);
 
                 if (map.IsTileOccupied(enemyX, enemyY)) continue;
 
-                enemyPositions.Add(new Vector2(enemyX, enemyY));
+                enemyPositions.Add(new SpawnPosition
+                {
+                    Position = new Vector2(enemyX + 0.5f, enemyY + 0.5f),
+                    SpawnData = random.Next()
+                });
             }
         }
 
@@ -144,7 +150,7 @@ namespace LevelGeneration
             return roomTemplates;
         }
 
-        private void GenerateRoomFromTemplate(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories, RoomTemplate roomTemplate, List<Vector2> enemyPositions)
+        private void GenerateRoomFromTemplate(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories, RoomTemplate roomTemplate, List<SpawnPosition> enemyPositions)
         {
             var roomX = roomTemplate.Position.x * RoomOverlappingWidth;
             var roomY = roomTemplate.Position.y * RoomOverlappingHeight;
@@ -177,9 +183,9 @@ namespace LevelGeneration
             AddRoomEnemyPosition(random, map, roomTemplate.Position.x, roomTemplate.Position.y, enemyPositions);
         }
 
-        private List<Vector2> GenerateRooms(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
+        private List<SpawnPosition> GenerateRooms(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
         {
-            var enemyPositions = new List<Vector2>();
+            var enemyPositions = new List<SpawnPosition>();
             var roomTemplates = GenerateRoomTemplates(random, map);
 
             foreach (var roomTemplate in roomTemplates[RoomCategory.Outdoor])

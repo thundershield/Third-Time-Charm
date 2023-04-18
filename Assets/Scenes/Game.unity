@@ -3004,6 +3004,66 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 116609712544316582, guid: fde0c1cb43bd3c04a9fcc17715fd3360, type: 3}
   m_PrefabInstance: {fileID: 786376641}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &847081421 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3224470926865221653, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+  m_PrefabInstance: {fileID: 3224470925975764643}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &847081430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847081421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78396926cbbfc4ac3b48fc5fc34a87d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  data:
+    dataString: UEsDBBQAAAgIAACAn+vHkYKKdwIAADIFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFlVE1z2jAQ/SuMziWDsRNCby0Q0pkmYUI7uXBZrDXWIEseSQ6QDP+9K9nGDuXCsu/t7tsP8cmEsiWmTpulEfxJc2TfB8zb7NugAx/xCDut1uIDW86b4C73JAicV3BCkz/yYVYX6IxIf6id9OQROSslMm2KBd/hTFtnyZ2BtEiQ0c5HK3J9DtiRvoZTH3Iiazzx1gdZ09HgTGaKyqHpqMntzW3DjWvTk2tupVIJRYncC+9CpkkTMEkCTVFLDWN0E9efJPa1tJTCNsqYO5Wh8xmUtqK+iMAFUKdBjm88R7HLnVfdD37JMouuGYOB01wYGlidlf3U9RQLsPta4TvIyte5D9rqlE//ocMowJnRxWNbNRr5Ci4X6f4VTilY1xty3z3/KrtSB5B72Ep8y1E966XRleIEOlP50MrieN79vDQ2yzHdd/5aauts61ZlN/jLUm/i+yS6v4vvFsPRpFmZ7+gcJnGcSVFswzaS2rGWOsw+nAUa2tcvkh+OxjZ5yes1/bX4B3b962qAB2GsI6jpWXmxW10ZT2WLMEHfW+Vm2igM7qavEhVId1pRGne9ziusV/YKeQD/jpriDdY+j6uQ4O74o9EVtNKHy+psrg9PaPOXykmhsBPtgWea00wrVV9bfyZt2LoyGaS9sF0l+NdDY9MJRPF4G405QjKNYRjzcQRRCtmYQuMMWLhEoahPkKtaaDMe2prqkiu6uvbvZbA0UIbL5wYOS/FR6N7Ihcr0OjWI6qXOcBGOhorQW+ULLmhAa3ROqLBv9rlhUqd75JtLok3odHF0BjZdlg0rxbt23rPxD9Dp4jdm9NtDl+teGXwXePAC2oRndv4HUEsDBBQAAAgIAACAn+sHCFVlbQAAAHgAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM011FQSi9KLMgoBooYgjilmSkgdrSSpXmiobFRkqFRSmqiiaVxoq5xipFhomFyYppRYnKqcVqiUixQfUllQapfYm4qRE9AYklGWmZeSmZeup57UWaKO8hopdhaAFBLAQItABQAAAgIAACAn+vHkYKKdwIAADIFAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAACAn+sHCFVlbQAAAHgAAAAJACQAAAAAAAAAAAAAAMQCAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAAfAMAAAAA
+    upgradeData: 
+    file_cachedStartup: {fileID: 0}
+    data_cachedStartup: 
+    cacheStartup: 0
+  showNavGraphs: 1
+  showUnwalkableNodes: 1
+  debugMode: 0
+  debugFloor: 0
+  debugRoof: 1
+  manualDebugFloorRoof: 0
+  showSearchTree: 0
+  unwalkableNodeDebugSize: 0.3
+  logPathResults: 1
+  maxNearestNodeDistance: 100
+  scanOnStartup: 1
+  fullGetNearestSearch: 0
+  prioritizeGraphs: 0
+  prioritizeGraphsLimit: 1
+  colorSettings:
+    _SolidColor: {r: 0.11764706, g: 0.4, b: 0.7882353, a: 0.9}
+    _UnwalkableNode: {r: 1, g: 0, b: 0, a: 0.5}
+    _BoundsHandles: {r: 0.29, g: 0.454, b: 0.741, a: 0.9}
+    _ConnectionLowLerp: {r: 0, g: 1, b: 0, a: 0.5}
+    _ConnectionHighLerp: {r: 1, g: 0, b: 0, a: 0.5}
+    _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
+    _AreaColors:
+    - {r: 0, g: 0, b: 0, a: 0}
+  tagNames: []
+  heuristic: 2
+  heuristicScale: 1
+  threadCount: 1
+  maxFrameTime: 1
+  batchGraphUpdates: 0
+  graphUpdateBatchingInterval: 0.2
+  euclideanEmbedding:
+    mode: 0
+    seed: 0
+    pivotPointRoot: {fileID: 0}
+    spreadOutCount: 1
+  showGraphs: 1
 --- !u!1 &862695876
 GameObject:
   m_ObjectHideFlags: 0
@@ -6328,6 +6388,18 @@ PrefabInstance:
     - target: {fileID: 3224470925705937469, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
       propertyPath: m_Name
       value: TilemapGrid
+      objectReference: {fileID: 0}
+    - target: {fileID: 3224470926865221652, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3224470926865221652, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3224470926865221653, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3224470926865221659, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
       propertyPath: m_Enabled

@@ -6,11 +6,12 @@ TagManager:
   tags:
   - itemObject
   - Inventory
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Tilemap
   - Water
   - UI
   - 

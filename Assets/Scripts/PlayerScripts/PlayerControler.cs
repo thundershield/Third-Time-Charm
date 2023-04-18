@@ -190,7 +190,7 @@ public class PlayerControler : MonoBehaviour
 
         if (health > 0) return;
 
-        RestartLevel();
+        //RestartLevel();
     }
 }
  

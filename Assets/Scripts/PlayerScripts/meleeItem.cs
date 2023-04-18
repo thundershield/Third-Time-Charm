@@ -27,7 +27,7 @@ public class meleeItem: usableItem {
         {
             if (!result.CompareTag("Enemy")) continue;
 
-            result.GetComponent<Enemy>().TakeDamage(damage);
+            result.GetComponent<Enemy>().TakeDamage(damage, gameObject);
         }
 	}
 }

@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4066378823516231427}
   - component: {fileID: 4066378823516231426}
   - component: {fileID: 4066378823516231425}
-  - component: {fileID: 4066378823516231424}
   - component: {fileID: 4066378823516231431}
+  - component: {fileID: 484568852934352841}
+  - component: {fileID: -3432230869083969228}
   m_Layer: 6
   m_Name: Skeleton
   m_TagString: Enemy
@@ -99,60 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c52e01b84247acad3a8ada7b5ba15d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkDownSprites:
-  - {fileID: -981997496, guid: 02840a259404d2040a0642cf10d755ad, type: 3}
-  - {fileID: 285565198, guid: 02840a259404d2040a0642cf10d755ad, type: 3}
-  - {fileID: -197021487, guid: 02840a259404d2040a0642cf10d755ad, type: 3}
-  - {fileID: 1719484865, guid: 02840a259404d2040a0642cf10d755ad, type: 3}
-  - {fileID: -2079410209, guid: 02840a259404d2040a0642cf10d755ad, type: 3}
-  - {fileID: -410458335, guid: 02840a259404d2040a0642cf10d755ad, type: 3}
-  walkLeftSprites:
-  - {fileID: -1982790245, guid: 0ddd7c15c41db4e4e9bba45e6b85fbd7, type: 3}
-  - {fileID: 203584515, guid: 0ddd7c15c41db4e4e9bba45e6b85fbd7, type: 3}
-  - {fileID: -2098372092, guid: 0ddd7c15c41db4e4e9bba45e6b85fbd7, type: 3}
-  - {fileID: -1532262292, guid: 0ddd7c15c41db4e4e9bba45e6b85fbd7, type: 3}
-  - {fileID: 1603706929, guid: 0ddd7c15c41db4e4e9bba45e6b85fbd7, type: 3}
-  - {fileID: -763542878, guid: 0ddd7c15c41db4e4e9bba45e6b85fbd7, type: 3}
-  walkRightSprites:
-  - {fileID: -867818310, guid: 58c724a47d3f99247879b1523447fc2d, type: 3}
-  - {fileID: 1947741936, guid: 58c724a47d3f99247879b1523447fc2d, type: 3}
-  - {fileID: 821418202, guid: 58c724a47d3f99247879b1523447fc2d, type: 3}
-  - {fileID: -740307605, guid: 58c724a47d3f99247879b1523447fc2d, type: 3}
-  - {fileID: 95575645, guid: 58c724a47d3f99247879b1523447fc2d, type: 3}
-  - {fileID: -1170452890, guid: 58c724a47d3f99247879b1523447fc2d, type: 3}
-  walkUpSprites:
-  - {fileID: -1468874401, guid: 266d722d790e4a84d9321be32abd8a1e, type: 3}
-  - {fileID: -880765326, guid: 266d722d790e4a84d9321be32abd8a1e, type: 3}
-  - {fileID: 510091769, guid: 266d722d790e4a84d9321be32abd8a1e, type: 3}
-  - {fileID: -1623358801, guid: 266d722d790e4a84d9321be32abd8a1e, type: 3}
-  - {fileID: -1834891716, guid: 266d722d790e4a84d9321be32abd8a1e, type: 3}
-  - {fileID: 461151270, guid: 266d722d790e4a84d9321be32abd8a1e, type: 3}
---- !u!61 &4066378823516231424
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4066378823516231430}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1.0625}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  target: {fileID: 0}
+  maxSpeed: 2
+  maxHealth: 50
 --- !u!50 &4066378823516231431
 Rigidbody2D:
   serializedVersion: 4
@@ -174,3 +124,47 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!70 &484568852934352841
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4066378823516231430}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.9, y: 0.9}
+  m_Direction: 0
+--- !u!114 &-3432230869083969228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4066378823516231430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1

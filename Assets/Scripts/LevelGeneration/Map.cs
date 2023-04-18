@@ -30,11 +30,10 @@ namespace LevelGeneration
             _worldGenerator = new GridWorldGenerator();
 
             Generate();
-            //This terrible bit of code is to get around a weird bug where the collider doesn't immediately load, causing the scan to fail
-            //deactivating and reactivating it fixes the issue, but this should be properly fixed at some point
-            TilemapCollider2D collider = GetComponent<TilemapCollider2D>();
-            collider.enabled = false;
-            collider.enabled = true;
+            //The tilemap collider takes a while to load unless we call this function
+            GetComponent<TilemapCollider2D>().ProcessTilemapChanges();
+            //Using the newly updated tilemap collider we can call the scan function to create a new grid
+            //for enemies to pathfind on
             AstarPath.active.Scan();
         }
 

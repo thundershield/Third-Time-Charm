@@ -8,7 +8,7 @@ public class arrow: MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.gameObject.CompareTag("Enemy")) {
-			other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
+			other.gameObject.GetComponent<Enemy>().TakeDamage(damage, gameObject);
 		}
 		Destroy(gameObject);
 	}

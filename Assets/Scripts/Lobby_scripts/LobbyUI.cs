@@ -24,6 +24,12 @@ public class LobbyUI : MonoBehaviour
         {
             LobbyManager.Instance.LeaveLobby();
         });
+        
+        StartLobbyButton.onClick.AddListener(() => 
+        {
+            LobbyManager.Instance.StartLobby();
+        });
+        
     }
     private void Start() 
     {   
@@ -54,12 +60,22 @@ public class LobbyUI : MonoBehaviour
             playerSingleTransform.gameObject.SetActive(true);
             LobbyPlayerSingleUI lobbyPlayerSingleUI = playerSingleTransform.GetComponent<LobbyPlayerSingleUI>();
             lobbyPlayerSingleUI.SetKickPlayerButtonVisible(LobbyManager.Instance.IsLobbyHost() &&player.Id!= AuthenticationService.Instance.PlayerId );
+            if(LobbyManager.Instance.IsLobbyHost())
+            {
+                StartLobbyButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                StartLobbyButton.gameObject.SetActive(false);
+            }
             lobbyPlayerSingleUI.UpdatePlayer(player);
         }
         lobbyNameText.text = lobby.Name;
         playerCountText.text = lobby.Players.Count + "/" + lobby.MaxPlayers;
         Show();
     }
+
+    
 
     private void ClearLobby() 
     {

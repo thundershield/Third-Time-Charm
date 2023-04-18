@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerCamera : MonoBehaviour
+public class PlayerCamera : NetworkBehaviour
 {
     private Transform _cameraTransform;
     

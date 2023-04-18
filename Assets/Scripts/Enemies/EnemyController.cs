@@ -1,13 +1,13 @@
 ﻿using System;
 using UnityEngine;
-using Random = System.Random;
+using Random = UnityEngine.Random;
 using Pathfinding;
 
 namespace Enemies
 {
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Enemy : MonoBehaviour
+    public class EnemyController : MonoBehaviour
     {
         public Transform target; //will usually hold the Transform of the player
         //[SerializeField] private float frameLength = 0.2f;
@@ -15,7 +15,9 @@ namespace Enemies
         [SerializeField] private float maxSpeed = 20.0f;
         [SerializeField] private int maxHealth = 50;
         [SerializeField] private int aggroRange = 20; //how close the player needs to get to aggro this enemy
+        [SerializeField] private int idleRange = 20; //How far the AI will wander when idling
         private int curHealth;
+        private float timer = 0; //a basic timer variable used for various states
 
         //private static readonly Random Random = new();
         
@@ -31,12 +33,13 @@ namespace Enemies
         private BehaviorState state = BehaviorState.idle;
         private Vector2 directionVec;
         private float distanceToTarget = 1000; //how far the target is, following the pathToTarget. Initialized to a high value so that default state will be idle
+        private float activePathLength = 1000;
         private Rigidbody2D rb;
         private Seeker seeker;
         private Path pathToTarget; //This will always point towards one of the players. Used for determining distance
         private Path activePath; //This is the actual path the AI will follow
         private float wayPointDistanceThreshold = 0.5f; //How close we need to get to the target waypoint before getting a new target
-        int targetWaypoint = 0;
+        int curWaypoint = 0;
         
         private void Start()
         {
@@ -45,7 +48,7 @@ namespace Enemies
             rb = GetComponent<Rigidbody2D>();
             seeker = GetComponent<Seeker>();
             //every quarter second update your path to the player
-            InvokeRepeating("FindPathToTarget",0f,.25f);
+            InvokeRepeating("FindPathToTarget",0f,.1f);
             curHealth = maxHealth;
             seeker.StartPath(rb.position, target.position, TargetPathFound);
         }
@@ -58,7 +61,14 @@ namespace Enemies
         {
             if(!newPath.error){
                 pathToTarget = newPath;
-                distanceToTarget = pathToTarget.GetTotalLength();
+                distanceToTarget = newPath.GetTotalLength();
+            }
+        }
+        void ActivePathFound(Path newPath)
+        {
+            if(!newPath.error){
+                activePath = newPath;
+                activePathLength = newPath.GetTotalLength();
             }
         }
 
@@ -85,28 +95,44 @@ namespace Enemies
                     IdleState();
                     break;
             }
-            //if(pathToTarget != null){
-            //    if (targetWaypoint >= pathToTarget.vectorPath.Count) {
-            //        return;
-            //    }
-            //    if(distanceToTarget < 20){
-            //        directionVec = ((Vector2)pathToTarget.vectorPath[targetWaypoint] - rb.position).normalized;//get the normalized vector pointing towards the current waypoint
-            //        rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);
-            //        //Increments the target waypoint if we are within distance
-            //        if(((rb.position - (Vector2)pathToTarget.vectorPath[targetWaypoint]).magnitude)<wayPointDistanceThreshold) targetWaypoint++;
-            //    }
-            //}
         }
         //The AI uses a state machine, where the state functions handles switching states and the behavior functions handle the behavior associated with that state
         //The Behavior and state are seperated so that different enemies AIs can override the behavior without copying the state function
+        
         private void IdleState(){
-            //if the 
+            IdleBehavior();
             if(distanceToTarget < aggroRange){
                 state = BehaviorState.combat;
             }
-            IdleBehavior();
         }
+        //Default idle behavior is to just find a random point within idle range, move towards it, and then wait 1 to 4 seconds before repeating
         private void IdleBehavior(){
+            if(timer > 0){//Wait until timer is finished
+                timer = timer - Time.fixedDeltaTime;
+            }
+            else if(activePath == null){//if there is no active path, try to create a new one
+                if(seeker.IsDone()){//don't cancel existing jobs
+                    //find a point that is between idleRange and idleRange/2 units away. Repeats until such a point is found
+                    Vector2 randomPoint = new Vector2(0,0);
+                    while(randomPoint.magnitude<idleRange/2){
+                        randomPoint = Random.insideUnitCircle*idleRange;
+                    }
+                    seeker.StartPath(rb.position, rb.position + randomPoint, ActivePathFound);//find a path to this new point
+                    curWaypoint = 0;//always reset your waypoint when finding a new path
+                }
+            }
+            else{
+                if(activePathLength > idleRange){//if the path turned out to be too long when its actual distance was measured, ditch it
+                    activePath = null;
+                    return;
+                }
+                if(curWaypoint >= activePath.vectorPath.Count){//if our current waypoint is the last waypoint, we've finished moving along the path
+                    timer = Random.Range(1.0f, 4.0f);
+                    activePath = null;
+                } else {
+                    curWaypoint = MoveAlongPath(activePath, curWaypoint);
+                }
+            }
         }
         private void CombatState(){
             if(distanceToTarget >= aggroRange){
@@ -116,13 +142,10 @@ namespace Enemies
         }
         private void CombatBehavior(){
             if(pathToTarget != null){
-                if (targetWaypoint >= pathToTarget.vectorPath.Count) {
+                if (curWaypoint >= pathToTarget.vectorPath.Count) {
                     return;
                 }
-                directionVec = ((Vector2)pathToTarget.vectorPath[targetWaypoint] - rb.position).normalized;//get the normalized vector pointing towards the current waypoint
-                rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);
-                //Increments the target waypoint if we are within distance
-                if(((rb.position - (Vector2)pathToTarget.vectorPath[targetWaypoint]).magnitude)<wayPointDistanceThreshold) targetWaypoint++;
+                curWaypoint = MoveAlongPath(pathToTarget, curWaypoint);
             }
         }
         private void AttackingState(){
@@ -143,6 +166,21 @@ namespace Enemies
         private void DeadBehavior(){
             
         }
+        //Moves towards a given waypoint on a path and returns whatever waypoint you are now on
+        private int MoveAlongPath(Path path, int waypoint){
+            directionVec = ((Vector2)path.vectorPath[waypoint] - rb.position).normalized;//get the normalized vector pointing towards the active waypoint
+            rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);//move towards it. Time.fixedDeltaTime keeps speed consistent even with lag
+            //Increments the target waypoint if we reached it. Sadly you can't just add a bool to an int, requiring a full if statement
+            if(((rb.position - (Vector2)path.vectorPath[waypoint]).magnitude)<wayPointDistanceThreshold){
+                return waypoint+1;
+            }else{
+                return waypoint;
+            }
+        }
+        //directionVec = ((Vector2)pathToTarget.vectorPath[curWaypoint] - rb.position).normalized;//get the normalized vector pointing towards the current waypoint
+        //rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);
+        ////Increments the target waypoint if we are within distance
+        //if(((rb.position - (Vector2)pathToTarget.vectorPath[curWaypoint]).magnitude)<wayPointDistanceThreshold) curWaypoint++;
         private void Update()
         {
             //_animationTimer += Time.deltaTime;

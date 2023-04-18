@@ -1,12 +1,16 @@
 {
     "name": "LevelGen",
     "rootNamespace": "LevelGeneration",
-    "references": [],
+    "references": [
+        "GUID:efa45043feb7e4147a305b73b5cea642"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Pathfinding.Ionic.Zip.Reduced.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

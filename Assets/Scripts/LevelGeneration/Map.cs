@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = System.Random;
+using Pathfinding;
 
 namespace LevelGeneration
 {
@@ -29,6 +30,12 @@ namespace LevelGeneration
             _worldGenerator = new GridWorldGenerator();
 
             Generate();
+            //This terrible bit of code is to get around a weird bug where the collider doesn't immediately load, causing the scan to fail
+            //deactivating and reactivating it fixes the issue, but this should be properly fixed at some point
+            TilemapCollider2D collider = GetComponent<TilemapCollider2D>();
+            collider.enabled = false;
+            collider.enabled = true;
+            AstarPath.active.Scan();
         }
 
         public void Generate()

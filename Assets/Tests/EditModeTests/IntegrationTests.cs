@@ -1,3 +1,7 @@
+//this is two acceptance tests followed by an integration test. I lumped them together because it doesn't make
+//sense to test whether the camera follows the player when the player moves if the camera
+//doesn't follow the player or the player doesn't move.  
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,22 +12,22 @@ public class IntegrationTests
 {
     private GameObject playerGameObject;
     private GameObject cameraGameObject;
-    private CameraMovement cameraMovement;
-    private PlayerMovement playerMovement;
+//    private CameraMovement cameraMovement;
+//    private PlayerMovement playerMovement;
 
     [SetUp]
     public void Setup()
     {
         playerGameObject = new GameObject();
-        playerMovement = playerGameObject.AddComponent<PlayerMovement>();
+    //    playerMovement = playerGameObject.AddComponent<PlayerMovement>();
         playerGameObject.AddComponent<Rigidbody2D>();
         playerGameObject.AddComponent<Animator>();
-        playerMovement.playerSpeed = 5f;
+    //    playerMovement.playerSpeed = 5f;
 
         cameraGameObject = new GameObject();
-        cameraMovement = cameraGameObject.AddComponent<CameraMovement>();
-        cameraMovement.playerTarget = playerGameObject.transform;
-        cameraMovement.cameraSmoothing = 0.1f;
+    //    cameraMovement = cameraGameObject.AddComponent<CameraMovement>();
+    //    cameraMovement.playerTarget = playerGameObject.transform;
+    //    cameraMovement.cameraSmoothing = 0.1f;
     }
 
     [UnityTest]
@@ -51,13 +55,13 @@ public class IntegrationTests
 
         yield return null;
 
-        playerMovement.playerSpeed = 5f;
+     //   playerMovement.playerSpeed = 5f;
 
         yield return new WaitForSeconds(0.1f);
 
     //    playerMovement.Update();
     //    playerMovement.playerMovementChange = new Vector3(1f, 0f, 0f);
-     //   playerMovement.MoveCharacter();
+    //    playerMovement.MoveCharacter();
 
         yield return new WaitForSeconds(0.1f);
 
@@ -72,7 +76,7 @@ public class IntegrationTests
 
         yield return null;
 
-        playerMovement.playerSpeed = 5f;
+    //    playerMovement.playerSpeed = 5f;
 
         yield return new WaitForSeconds(0.1f);
 

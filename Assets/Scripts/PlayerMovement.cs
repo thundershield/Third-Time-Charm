@@ -1,3 +1,5 @@
+//player movement script
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,10 +12,10 @@ public class PlayerMovement : MonoBehaviour
         interact
     }
     public float playerSpeed;
-    private PlayerState currentState;
-    private Rigidbody2D playerRidgedbody;
-    private Animator playerAnimator;
-    private Vector3 playerMovementChange;
+    public PlayerState currentState;
+    public Rigidbody2D playerRidgedbody;
+    public Animator playerAnimator;
+    public Vector3 playerMovementChange;
 
     // Start is called before the first frame update
     void Start()

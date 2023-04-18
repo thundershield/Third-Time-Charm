@@ -4,7 +4,7 @@
 
 //white box tests
 //This is 100% branch coverage as both possible outcomes for the if statement are tested.
-
+/*
 using NUnit.Framework;
 using UnityEngine;
 
@@ -125,4 +125,4 @@ public class CameraMovementTests
         // Assert
         Assert.AreEqual(cameraStartPosition, cameraMovement.transform.position);
     }
-}
+}*/

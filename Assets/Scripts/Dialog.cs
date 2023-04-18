@@ -7,7 +7,11 @@ using UnityEngine.UI;
 public class Dialog
 {
     public string npcName;
+
     [TextArea(3, 9)]
     public string[] npcDialog;
+    
+    [TextArea(3, 9)]
+    public string[] npcNoAnswerDialog;
 }
 

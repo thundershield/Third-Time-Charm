@@ -391,7 +391,7 @@ GameObject:
   - component: {fileID: 184216828}
   - component: {fileID: 184216827}
   - component: {fileID: 184216826}
-  - component: {fileID: 184216825}
+  - component: {fileID: 184216829}
   m_Layer: 5
   m_Name: yesButton
   m_TagString: Untagged
@@ -420,24 +420,6 @@ RectTransform:
   m_AnchoredPosition: {x: 315.02124, y: 13.50116}
   m_SizeDelta: {x: 119.9575, y: 41}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &184216825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184216823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65f5cabc460078f46834b1cdf6616862, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialog:
-    npcName: Lorenzo
-    npcDialog:
-    - Hi, my name is Lorenzo. Do you know where you are?
-    - This is Mysteria, the land of many treasures.
-    - Head towards the water. It will quench your thirst for adventure.
 --- !u!114 &184216826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,9 +464,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 184216825}
-        m_TargetAssemblyTypeName: DialogTrigger, Assembly-CSharp
-        m_MethodName: TriggerDialog
+      - m_Target: {fileID: 184216829}
+        m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+        m_MethodName: TriggerYesDialog
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -532,6 +514,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 184216823}
   m_CullTransparentMesh: 1
+--- !u!114 &184216829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184216823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8aa68891e6d25842bc5112054cc6825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesDialog:
+    npcName: Joe Dirt
+    npcDialog:
+    - you said yes
+    npcNoAnswerDialog: []
+  noDialog:
+    npcName: Joe
+    npcDialog:
+    - You daid yes
+    npcNoAnswerDialog: []
+  npcDialogBox: {fileID: 304568424}
+  npcName: {fileID: 1759079688}
+  npcDialogText: {fileID: 799430608}
+  npcNameString: 
+  npcTextString: 
+  npcTriggered: 0
 --- !u!1 &253747817
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,6 +556,8 @@ GameObject:
   - component: {fileID: 253747819}
   - component: {fileID: 253747818}
   - component: {fileID: 253747823}
+  - component: {fileID: 253747824}
+  - component: {fileID: 253747825}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -565,12 +577,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65f5cabc460078f46834b1cdf6616862, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog:
-    npcName: Lorenzo
-    npcDialog:
-    - Hi, my name is Lorenzo. Do you know where you are?
-    - This is Mysteria, the land of many treasures.
-    - Head towards the water. It will quench your thirst for adventure.
 --- !u!61 &253747819
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -683,7 +689,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253747817}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1884, y: 1.1797, z: 0}
+  m_LocalPosition: {x: 4, y: 4, z: 0}
   m_LocalScale: {x: 1.525, y: 2.1473, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -702,12 +708,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8aa68891e6d25842bc5112054cc6825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  yesDialog:
+    npcName: 
+    npcDialog: []
+    npcNoAnswerDialog: []
+  noDialog:
+    npcName: 
+    npcDialog: []
+    npcNoAnswerDialog: []
   npcDialogBox: {fileID: 304568424}
   npcName: {fileID: 1759079688}
   npcDialogText: {fileID: 799430608}
   npcNameString: Lorenzo
   npcTextString: Do you want to know who I am?
   npcTriggered: 0
+--- !u!50 &253747824
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253747817}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!114 &253747825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253747817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3efff97587ce24d4c913a7a18e3f74c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitpoints: 20
+  npcSpeed: 1
+  NpcName: Lorenzo
+  currentState: 0
+  target: {fileID: 742869196}
+  homePosition: {fileID: 0}
+  findRadius: 5
+  triggerRadius: 1
 --- !u!1 &282407897
 GameObject:
   m_ObjectHideFlags: 0
@@ -2556,7 +2611,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 742869192}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.0292, y: -0.544, z: 0}
+  m_LocalPosition: {x: -5, y: 1, z: 0}
   m_LocalScale: {x: 1.0957, y: 1.2631, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2575,7 +2630,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32c811a98fb63a64eb0aef8118869dde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 16
+  playerSpeed: 20
+  currentState: 0
+  playerRidgedbody: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  playerMovementChange: {x: 0, y: 0, z: 0}
 --- !u!1 &776950421
 GameObject:
   m_ObjectHideFlags: 0
@@ -2670,7 +2729,7 @@ GameObject:
   - component: {fileID: 799430609}
   - component: {fileID: 799430608}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: BodyText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5654,6 +5713,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909590903}
   m_CullTransparentMesh: 1
+--- !u!1 &1110595034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1110595035}
+  m_Layer: 0
+  m_Name: HomePoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1110595035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110595034}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1770933031}
+  - {fileID: 1368573966}
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1294394457
 GameObject:
   m_ObjectHideFlags: 0
@@ -5666,7 +5758,7 @@ GameObject:
   - component: {fileID: 1294394460}
   - component: {fileID: 1294394459}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: No
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5856,6 +5948,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296125739}
   m_CullTransparentMesh: 1
+--- !u!1 &1368573965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1368573966}
+  m_Layer: 0
+  m_Name: PointB
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1368573966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368573965}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.9, y: 5.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1110595035}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1407794074
 GameObject:
   m_ObjectHideFlags: 0
@@ -5936,6 +6059,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1407794074}
   m_CullTransparentMesh: 1
+--- !u!1 &1549805825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1549805827}
+  - component: {fileID: 1549805826}
+  m_Layer: 0
+  m_Name: DialogManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1549805826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549805825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a80d430a707581d4c907577841bc3cdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameTxt: {fileID: 1759079688}
+  dialogTxt: {fileID: 799430608}
+--- !u!4 &1549805827
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549805825}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1561050527
 GameObject:
   m_ObjectHideFlags: 0
@@ -6185,6 +6354,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1759079686}
   m_CullTransparentMesh: 1
+--- !u!1 &1770933030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1770933031}
+  m_Layer: 0
+  m_Name: PointA
+  m_TagString: Untagged
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1770933031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770933030}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.26, y: -1.78, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1110595035}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1812285114
 GameObject:
   m_ObjectHideFlags: 0
@@ -6336,11 +6536,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580233415d0f14245a01fc260e6694ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chestDialogBox: {fileID: 304568424}
-  npcName: {fileID: 1759079688}
-  chestDialogText: {fileID: 799430608}
-  chestNameString: 
-  chestTextString: Congratulations! You have recieved an <Item>.
+  chestDialogBox: {fileID: 1920150719}
+  npcName: {fileID: 909590905}
+  chestDialogText: {fileID: 282407899}
+  chestNameString: Chest
+  chestTextString: You found an item!
   chestTriggered: 0
 --- !u!1 &1828892198
 GameObject:
@@ -6440,7 +6640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTarget: {fileID: 742869196}
-  cameraSmoothing: 1
+  cameraSmoothing: 0
 --- !u!1 &1920150719
 GameObject:
   m_ObjectHideFlags: 0
@@ -6453,7 +6653,7 @@ GameObject:
   - component: {fileID: 1920150722}
   - component: {fileID: 1920150721}
   m_Layer: 5
-  m_Name: npcDialogBox
+  m_Name: chestDialogBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6533,6 +6733,7 @@ GameObject:
   - component: {fileID: 2074704344}
   - component: {fileID: 2074704343}
   - component: {fileID: 2074704342}
+  - component: {fileID: 2074704345}
   m_Layer: 5
   m_Name: NoButton
   m_TagString: Untagged
@@ -6604,7 +6805,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2074704343}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2074704345}
+        m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+        m_MethodName: TriggerNoDialog
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2074704343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6643,3 +6856,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2074704340}
   m_CullTransparentMesh: 1
+--- !u!114 &2074704345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074704340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8aa68891e6d25842bc5112054cc6825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesDialog:
+    npcName: Joey Bonze
+    npcDialog:
+    - Yes Dialog for the no button
+    npcNoAnswerDialog: []
+  noDialog:
+    npcName: Joe
+    npcDialog:
+    - Npc Dialog under no dialog
+    npcNoAnswerDialog:
+    - You said no
+  npcDialogBox: {fileID: 304568424}
+  npcName: {fileID: 1759079688}
+  npcDialogText: {fileID: 799430608}
+  npcNameString: New Name String
+  npcTextString: New Text String
+  npcTriggered: 0

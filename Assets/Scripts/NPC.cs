@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class NPC : MonoBehaviour
 {
+    public Dialog yesDialog;
+    public Dialog noDialog;
     public GameObject npcDialogBox;
     public Text npcName;
     public Text npcDialogText;
@@ -19,23 +21,19 @@ public class NPC : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && npcTriggered)
+        if(npcTriggered == true) // && currentState == NpcState.talking)
         {
-            if(npcDialogBox.activeInHierarchy)
-            {
-                npcDialogBox.SetActive(false);
-            }
-            else
-            {
-                npcDialogBox.SetActive(true);
-                npcName.text = npcNameString;
-                npcDialogText.text = npcTextString;
-                
-                
-            }
+            npcDialogBox.SetActive(true);
+            npcName.text = npcNameString;
+            npcDialogText.text = npcTextString;
         }
+       // else
+      //  {
+      //      npcDialogBox.SetActive(false);
+      //  }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -44,6 +42,7 @@ public class NPC : MonoBehaviour
         {
             Debug.Log("player triggered npc");
             npcTriggered = true;
+            //npcDialogBox.SetActive(true);
         }
     }
 
@@ -55,5 +54,15 @@ public class NPC : MonoBehaviour
             npcTriggered = false;
             npcDialogBox.SetActive(false);
         }
+    }
+
+    public void TriggerYesDialog()
+    {
+        FindObjectOfType<DialogManager>().StartYesDialog(yesDialog);
+    }
+
+    public void TriggerNoDialog()
+    {
+        FindObjectOfType<DialogManager>().StartNoDialog(noDialog);
     }
 }

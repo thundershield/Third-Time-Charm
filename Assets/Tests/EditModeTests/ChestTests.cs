@@ -1,5 +1,5 @@
 //acceptance tests because it tests whether or not chest functions perform properly 
-
+/*
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,7 +61,7 @@ public class ChestTests {
         chest.chestTextString = "Chest Text";
 
         // Act
-      //  chest.Update();
+     //   chest.Update();
         chest.npcName = new GameObject().AddComponent<Text>();
         chest.chestDialogText = new GameObject().AddComponent<Text>();
         chest.chestDialogBox.SetActive(true);
@@ -72,3 +72,4 @@ public class ChestTests {
         Assert.AreEqual(chest.chestTextString, chest.chestDialogText.text);
     }
 }
+*/

@@ -4,7 +4,7 @@ public class GameController : MonoBehaviour
 {
 	public GameObject itemPrefab;
 
-	private int numItems = 3;
+	private int numItems = 6;
 
 	void Start() 
 	{

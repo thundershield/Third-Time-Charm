@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8477082620076235732}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,6 +111,8 @@ MonoBehaviour:
   rb: {fileID: 8477082620076235730}
   animator: {fileID: 8477082620076235732}
   playerInventory: {fileID: 0}
+  directionX: 0
+  directionY: -1
 --- !u!114 &5042923360434034955
 MonoBehaviour:
   m_ObjectHideFlags: 0

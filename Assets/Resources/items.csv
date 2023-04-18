@@ -1,5 +1,7 @@
 ﻿item_id,name,flavorText,statDescription,itemType,statType,statAmount,sprite
 0,Item not found,Someone forgot to give the item an ID,Congrats you broke the game,stat,defense,1000,none
-1,Sword,This is a sword,gives lot of attack power,weapon,attack,2,none
+1,Sword,This is a sword,gives lot of attack power,weapon,melee,2,none
 2,Boots of Moving Fast,Footware for moving fast,gives increased speed,stat,speed,2,none
 3,Armor,Something genaric that gives you defense,Make you take less damage,stat,defense,2,none
+4,Arrow Shooter,THIS IS A BOW,LOOK AT ME I SHOOT THINGS,weapon,ranged,2,none
+5,Health Potion,Red sugar water,Heals you,weapon,potion,10,none

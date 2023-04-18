@@ -30,8 +30,8 @@ public class PlayerControler : MonoBehaviour
 
     private Vector2 movement; //the direction the player is moving in
     private float currentSpeed = 0;
-    int directionX = 0;
-    int directionY = -1;
+    public int directionX = 0;
+    public int directionY = -1;
 
     void OnTriggerEnter2D(Collider2D other)
     {   
@@ -47,7 +47,6 @@ public class PlayerControler : MonoBehaviour
         armor = stats.armor;
         speed = stats.speed;
         maxSpeed = 5f + stats.speed/5;
-        acceleration = 5f + stats.speed/5;
     }
 
     private void Awake()
@@ -94,6 +93,8 @@ public class PlayerControler : MonoBehaviour
     void Update()
     {
         invincibilityTimer -= Time.deltaTime;
+        GameObject.Find("HealthBar").GetComponent<Slider>().value = health/100f;
+        GameObject.Find("HealthNumber").GetComponent<TextMeshProUGUI>().text = "Health: " + health.ToString();
         
         Collider2D coll = GetComponent<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D().NoFilter();
@@ -123,29 +124,16 @@ public class PlayerControler : MonoBehaviour
         {
             animator.Play("Attack");
             attackTimer = AttackTime;
-            rb.velocity = Vector2.zero;
-            movement = Vector2.zero;
             
             // Attack anything in front of the player:
-            var directionVec = new Vector2(directionX, directionY);
-            var hitResults = new List<Collider2D>();
-            var hitFilter = new ContactFilter2D().NoFilter();
-            Physics2D.OverlapBox((Vector2)transform.position + directionVec, Vector2.one * AttackHitboxSize, 0f, hitFilter, hitResults);
-
-            foreach (var result in hitResults)
-            {
-                if (!result.CompareTag("Enemy")) continue;
-
-                result.GetComponent<Enemy>().TakeDamage(damage);
+            if(playerInventory.mainInventory.currentItem != null) { 
+                playerInventory.mainInventory.currentUsableItem.use(); 
             }
         }
         
         if (attackTimer > 0f)
         {
             attackTimer -= Time.deltaTime;
-
-            // Don't continue and let the player move while attacking.
-            return;
         }
         
         // Runs only if the player is not attacking:
@@ -202,7 +190,7 @@ public class PlayerControler : MonoBehaviour
 
         if (health > 0) return;
 
-        RestartLevel();
+        //RestartLevel();
     }
 }
  

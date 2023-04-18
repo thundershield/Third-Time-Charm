@@ -22,6 +22,7 @@ using TMPro;
     }
 
     public class inventoryMenu : MonoBehaviour {
+        public GameObject projectilePrefab;
 
         public bool isOpen = true;
         public bool clickingItem = false;
@@ -36,9 +37,14 @@ using TMPro;
         }
 
         public GameObject selected;
+        public int hotBarSelected;
+        public GameObject currentItem = null;
+        public usableItem currentUsableItem;
+
         public GameObject itemPrefab;
 
         public void Awake() {
+            hotBarSelected = 1;
             TextAsset dataset = Resources.Load<TextAsset>("items");
 
             string[] splitDataset = dataset.text.Split(new char[] {'\n'});
@@ -140,6 +146,11 @@ using TMPro;
                 selected = null;
                 deselectItem();
             }
+
+            Debug.Log(hotBarSelected);
+            Transform hotbar = grid.transform.GetChild(hotBarSelected-1);
+            hotbar.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+
         }
 
         public void openInventory() {
@@ -170,6 +181,7 @@ using TMPro;
 
             transform.Find("PlayerStats").gameObject.SetActive(true);
             updateStatWindow();
+            updateHotBar(hotBarSelected);
         }
 
         public void rotateInventory() {
@@ -224,6 +236,116 @@ using TMPro;
             }
             if(Input.GetKeyDown(KeyCode.V)) {
                 dropItem();
+            }
+            if(Input.mouseScrollDelta.y != 0) {
+                GameObject grid = transform.Find("Grid").gameObject; 
+                Transform tile = grid.transform.GetChild(hotBarSelected-1);
+                tile.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+
+                hotBarSelected = ( hotBarSelected + (int)Input.mouseScrollDelta.y) % 6;
+                hotBarSelected = hotBarSelected > 0 ? hotBarSelected: hotBarSelected+6;
+                updateHotBar(hotBarSelected);
+                
+            }
+            if(Input.GetKeyDown(KeyCode.Alpha1)) {
+                GameObject grid = transform.Find("Grid").gameObject; 
+                Transform tile = grid.transform.GetChild(hotBarSelected-1);
+                tile.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+                
+                hotBarSelected = 1;   
+
+                updateHotBar(hotBarSelected);
+            }
+            if(Input.GetKeyDown(KeyCode.Alpha2)) {
+                GameObject grid = transform.Find("Grid").gameObject; 
+                Transform tile = grid.transform.GetChild(hotBarSelected-1);
+                tile.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+                
+                hotBarSelected = 2;   
+
+                updateHotBar(hotBarSelected);
+            }
+            if(Input.GetKeyDown(KeyCode.Alpha3)) {
+                GameObject grid = transform.Find("Grid").gameObject; 
+                Transform tile = grid.transform.GetChild(hotBarSelected-1);
+                tile.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+                
+                hotBarSelected = 3;   
+
+                updateHotBar(hotBarSelected);
+            }
+            if(Input.GetKeyDown(KeyCode.Alpha4)) {
+                GameObject grid = transform.Find("Grid").gameObject; 
+                Transform tile = grid.transform.GetChild(hotBarSelected-1);
+                tile.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+                
+                hotBarSelected = 4;   
+
+                updateHotBar(hotBarSelected);
+            }
+            if(Input.GetKeyDown(KeyCode.Alpha5)) {
+                GameObject grid = transform.Find("Grid").gameObject; 
+                Transform tile = grid.transform.GetChild(hotBarSelected-1);
+                tile.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+                
+                hotBarSelected = 5;   
+
+                updateHotBar(hotBarSelected);
+            }
+            if(Input.GetKeyDown(KeyCode.Alpha6)) {
+                GameObject grid = transform.Find("Grid").gameObject; 
+                Transform tile = grid.transform.GetChild(hotBarSelected-1);
+                tile.gameObject.GetComponent<Image>().color = new Color32(140,140,140,255);
+                
+                hotBarSelected = 6;   
+
+                updateHotBar(hotBarSelected);
+            }
+        }
+
+        public void updateHotBar(int hotBarSelected) {
+            GameObject grid = transform.Find("Grid").gameObject; 
+            Transform tile = grid.transform.GetChild(hotBarSelected-1);
+            tile.gameObject.GetComponent<Image>().color = new Color32(250, 241, 122, 255);
+
+            if(tile.childCount > 0) {
+                int id = tile.GetChild(0).GetComponent<item>().itemId;
+                itemInfo info = queryItem(id);
+                if(info.statType == "melee") {
+                    GameObject newItem = new GameObject();
+                    newItem.AddComponent(typeof(meleeItem));
+                    currentUsableItem = newItem.GetComponent<meleeItem>();
+                    if(currentItem != null) {
+                        Destroy(currentItem);
+                    }
+                    currentItem = newItem;
+                    newItem.transform.SetParent(GameObject.Find("Player(Clone)").transform);
+                }
+                if(info.statType == "ranged") {
+                    GameObject newItem = new GameObject();
+                    newItem.AddComponent(typeof(rangedItem));
+                    currentUsableItem = newItem.GetComponent<rangedItem>();
+                    if(currentItem != null) {
+                        Destroy(currentItem);
+                    }
+                    currentItem = newItem;
+                    newItem.transform.SetParent(GameObject.Find("Player(Clone)").transform);
+                }
+                if(info.statType == "potion") {
+                    GameObject newItem = new GameObject();
+                    newItem.AddComponent(typeof(potion));
+                    currentUsableItem = newItem.GetComponent<potion>();
+                    if(currentItem != null) {
+                        Destroy(currentItem);
+                    }
+                    currentItem = newItem;
+                    newItem.transform.SetParent(GameObject.Find("Player(Clone)").transform);   
+                }
+            }
+            else {
+                if(currentItem != null) {
+                    Destroy(currentItem);
+                }
             }
         }
 

@@ -6,10 +6,12 @@ using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviour 
 {
     public static LobbyManager Instance { get; private set; }
+
     public const string KEY_PLAYER_NAME = "PlayerName";
     public event EventHandler OnLeftLobby;
     public event EventHandler<LobbyEventArgs> OnJoinedLobby;
@@ -250,6 +252,12 @@ public class LobbyManager : MonoBehaviour
             }
         }
     }
+    public async void StartLobby()
+    {
+        Debug.Log("start game");
+        Loader.LoadNetwork(Loader.Scene.Game);
+        DeleteLobby();
+    }
     public async void KickPlayer(string playerId) 
     {
         if (IsLobbyHost()) 
@@ -260,6 +268,22 @@ public class LobbyManager : MonoBehaviour
             } 
             catch (LobbyServiceException e) 
             {
+            }
+        }
+    }
+
+    public async void DeleteLobby() 
+    {
+        if (joinedLobby != null) 
+        {
+            try 
+            {
+                await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
+                joinedLobby = null;
+            } 
+            catch (LobbyServiceException e) 
+            {
+                Debug.Log(e);
             }
         }
     }

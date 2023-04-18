@@ -8,29 +8,35 @@ using UnityEngine.UI;
 
 public class LobbyUI : MonoBehaviour 
 {
+    static int check=2;
     public static LobbyUI Instance { get; private set; }
     [SerializeField] private Transform playerSingleTemplate;
     [SerializeField] private Transform container;
     [SerializeField] private TextMeshProUGUI lobbyNameText;
     [SerializeField] private TextMeshProUGUI playerCountText;
     [SerializeField] private Button leaveLobbyButton;
+    [SerializeField] private Button StartLobbyButton;
     private void Awake() 
     {
         Instance = this;
-
         playerSingleTemplate.gameObject.SetActive(false);
         leaveLobbyButton.onClick.AddListener(() => 
         {
             LobbyManager.Instance.LeaveLobby();
         });
+        
+        StartLobbyButton.onClick.AddListener(() => 
+        {
+            LobbyManager.Instance.StartLobby();
+        });
+        
     }
     private void Start() 
-    {
+    {   
         LobbyManager.Instance.OnJoinedLobby += UpdateLobby_Event;
         LobbyManager.Instance.OnJoinedLobbyUpdate += UpdateLobby_Event;
         LobbyManager.Instance.OnLeftLobby += LobbyManager_OnLeftLobby;
         LobbyManager.Instance.OnKickedFromLobby += LobbyManager_OnLeftLobby;
-
         Hide();
     }
     private void LobbyManager_OnLeftLobby(object sender, System.EventArgs e) 
@@ -54,12 +60,22 @@ public class LobbyUI : MonoBehaviour
             playerSingleTransform.gameObject.SetActive(true);
             LobbyPlayerSingleUI lobbyPlayerSingleUI = playerSingleTransform.GetComponent<LobbyPlayerSingleUI>();
             lobbyPlayerSingleUI.SetKickPlayerButtonVisible(LobbyManager.Instance.IsLobbyHost() &&player.Id!= AuthenticationService.Instance.PlayerId );
+            if(LobbyManager.Instance.IsLobbyHost())
+            {
+                StartLobbyButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                StartLobbyButton.gameObject.SetActive(false);
+            }
             lobbyPlayerSingleUI.UpdatePlayer(player);
         }
         lobbyNameText.text = lobby.Name;
         playerCountText.text = lobby.Players.Count + "/" + lobby.MaxPlayers;
         Show();
     }
+
+    
 
     private void ClearLobby() 
     {

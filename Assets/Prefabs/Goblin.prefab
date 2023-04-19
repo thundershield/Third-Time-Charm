@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4066378823516231431}
   - component: {fileID: 7387342085390739238}
   - component: {fileID: -2725442022411308202}
+  - component: {fileID: -6641492403607221029}
   m_Layer: 6
   m_Name: Goblin
   m_TagString: Enemy
@@ -103,6 +104,10 @@ MonoBehaviour:
   target: {fileID: 0}
   maxSpeed: 2
   maxHealth: 50
+  aggroRange: 20
+  idleRange: 20
+  curWaypoint: 0
+  targetWaypoint: 0
 --- !u!50 &4066378823516231431
 Rigidbody2D:
   serializedVersion: 4
@@ -168,3 +173,23 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
+--- !u!95 &-6641492403607221029
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4066378823516231430}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

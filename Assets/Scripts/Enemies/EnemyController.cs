@@ -15,7 +15,7 @@ namespace Enemies
         [SerializeField] private float maxSpeed = 20.0f;
         [SerializeField] private int maxHealth = 50;
         [SerializeField] private int aggroRange = 20; //how close the player needs to get to aggro this enemy
-        [SerializeField] private int idleRange = 20; //How far the AI will wander when idling
+        [SerializeField] private int idleRange = 10; //How far the AI will wander when idling
         private int curHealth;
         private float timer = 0; //a basic timer variable used for various states
 
@@ -34,11 +34,12 @@ namespace Enemies
         private Vector2 directionVec;
         private float distanceToTarget = 1000; //how far the target is, following the pathToTarget. Initialized to a high value so that default state will be idle
         private float activePathLength = 1000;
+        private Animator animator;
         private Rigidbody2D rb;
         private Seeker seeker;
         private Path pathToTarget; //This will always point towards one of the players. Used for determining distance
         private Path activePath; //This is the actual path the AI will follow
-        private float wayPointDistanceThreshold = 0.25f; //How close we need to get to the target waypoint before getting a new target
+        private float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target
         public int curWaypoint = 0;
         public int targetWaypoint = 0;
         
@@ -48,6 +49,8 @@ namespace Enemies
             //_spriteRenderer = GetComponent<SpriteRenderer>();
             rb = GetComponent<Rigidbody2D>();
             seeker = GetComponent<Seeker>();
+            animator = GetComponent<Animator>();
+            timer = Random.Range(1.0f, 4.0f);
             //update your path to the player 10 times a second. A* is pretty efficient and our grid is pretty small, so this isn't too expensive
             InvokeRepeating("FindPathToTarget",0f,.1f);
             curHealth = maxHealth;
@@ -60,7 +63,7 @@ namespace Enemies
         }
         void TargetPathFound(Path newPath)
         {
-            if(!newPath.error){
+            if(!newPath.error&&PathUtilities.IsPathPossible(newPath.path)){
                 pathToTarget = newPath;
                 distanceToTarget = newPath.GetTotalLength();
                 //targetWaypoint = 0;
@@ -112,19 +115,24 @@ namespace Enemies
         private void IdleBehavior(){
             if(timer > 0){//Wait until timer is finished
                 timer = timer - Time.fixedDeltaTime;
+                animator.SetBool("isMoving", false);
             }
             else if(activePath == null){//if there is no active path, try to create a new one
                 if(seeker.IsDone()){//don't cancel existing jobs
-                    //find a point that is between idleRange and idleRange/2 units away. Repeats until such a point is found
-                    Vector2 randomPoint = new Vector2(0,0);
-                    while(randomPoint.magnitude<idleRange/2){
-                        randomPoint = Random.insideUnitCircle*idleRange;
-                    }
-                    seeker.StartPath(rb.position, rb.position + randomPoint, ActivePathFound);//find a path to this new point
+                    Vector2 randomPoint;
+                    GraphNode randomNode;
+                    do{
+                        //creates a point that is between idleRange/2 and idleRange units away
+                        randomPoint = Random.insideUnitCircle*idleRange/2;
+                        randomPoint = randomPoint + randomPoint.normalized*idleRange/2+rb.position;
+                        randomNode = AstarPath.active.GetNearest(randomPoint).node;//Find the closest node to that point
+                        //If the node is unreachable, abandon it and retry
+                    }while(!randomNode.Walkable || !PathUtilities.IsPathPossible((AstarPath.active.GetNearest(rb.position).node),randomNode));
+                    seeker.StartPath(rb.position, (Vector3)randomNode.position, ActivePathFound);//find a path to this new point
                 }
             }
             else{
-                if(activePathLength > idleRange){//if the path turned out to be too long when its actual distance was measured, ditch it
+                if(activePathLength > idleRange&&PathUtilities.IsPathPossible(activePath.path)){//if the path turned out to be too long when its actual distance was measured, ditch it
                     activePath = null;
                     return;
                 }
@@ -140,6 +148,7 @@ namespace Enemies
             CombatBehavior();
             if(distanceToTarget >= aggroRange){
                 state = BehaviorState.idle;
+                timer = Random.Range(1.0f, 4.0f);
             }
         }
         private void CombatBehavior(){
@@ -147,8 +156,7 @@ namespace Enemies
                 if (targetWaypoint >= pathToTarget.vectorPath.Count) {
                     return;
                 }
-                if(distanceToTarget > 1){}
-                    targetWaypoint = MoveAlongPath(pathToTarget, targetWaypoint);
+                targetWaypoint = MoveAlongPath(pathToTarget, targetWaypoint);
             }
         }
         private void AttackingState(){
@@ -171,8 +179,14 @@ namespace Enemies
         }
         //Moves towards a given waypoint on a path and returns whatever waypoint you are now on
         private int MoveAlongPath(Path path, int waypoint){
+            animator.SetBool("isMoving", true);
             directionVec = ((Vector2)path.vectorPath[waypoint] - rb.position).normalized;//get the normalized vector pointing towards the active waypoint
             rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);//move towards it. Time.fixedDeltaTime keeps speed consistent even with lag
+            if(directionVec.x > 0 ){
+                transform.localScale = new Vector3(1,1,1);
+            }else{
+                transform.localScale = new Vector3(-1,1,1);
+            }
             //Increments the target waypoint if we reached it. Sadly since you can't just add a bool to an int it requires an if statement
             if(((rb.position - (Vector2)path.vectorPath[waypoint]).magnitude)<wayPointDistanceThreshold){
                 return waypoint+1;

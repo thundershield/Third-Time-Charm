@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Pathfinding;
@@ -16,21 +17,14 @@ namespace Enemies
         [SerializeField] private int maxHealth = 50;
         [SerializeField] private int aggroRange = 20; //how close the player needs to get to aggro this enemy
         [SerializeField] private int idleRange = 10; //How far the AI will wander when idling
-        private int curHealth;
+        [SerializeField] private float knockBackTime = 0.25f; //how long the enemy will move back from being hit. This should be less then the stunTime
+        [SerializeField] private float stunTime = 0.5f; //how long the enemy will be stunned after being hit. This should be equal to the length of the stun animation
+        [SerializeField] private float knockBack = 3.0f; //how far back the enemy will be knocked after being hit
+        [SerializeField] private int curHealth;
         private float timer = 0; //a basic timer variable used for various states
+        private bool justDamaged = false;
 
-        //private static readonly Random Random = new();
-        
-        //[SerializeField] private Sprite[] walkDownSprites;
-        //[SerializeField] private Sprite[] walkLeftSprites;
-        //[SerializeField] private Sprite[] walkRightSprites;
-        //[SerializeField] private Sprite[] walkUpSprites;
-        
-        //private SpriteRenderer _spriteRenderer;
-        //private float _animationTimer;
-        //private float directionChangeTimer;
-        private Direction direction;
-        private BehaviorState state = BehaviorState.idle;
+        [SerializeField] private BehaviorState state = BehaviorState.idle;
         private Vector2 directionVec;
         private float distanceToTarget = 1000; //how far the target is, following the pathToTarget. Initialized to a high value so that default state will be idle
         private float activePathLength = 1000;
@@ -80,6 +74,10 @@ namespace Enemies
 
         private void FixedUpdate()
         {
+            if(justDamaged){
+                state = BehaviorState.damaged;
+                justDamaged = false;
+            }
             //Run whatever state the enemy is currently in
             switch(state){
                 case BehaviorState.idle: 
@@ -166,10 +164,13 @@ namespace Enemies
             
         }
         private void DamagedState(){
-            
+            //Damaged state is purposefully empty as DamagedBehavior takes care of the transition
         }
-        private void DamagedBehavior(){
-            
+        IEnumerator DamagedBehavior(){
+            yield return new WaitForSeconds(knockBackTime);
+            rb.velocity = Vector2.zero;
+            yield return new WaitForSeconds(stunTime-knockBackTime);
+            state = BehaviorState.combat;
         }
         private void DeadState(){
             
@@ -194,54 +195,18 @@ namespace Enemies
                 return waypoint;
             }
         }
-        private void Update()
-        {
-            //_animationTimer += Time.deltaTime;
-            //directionChangeTimer += Time.deltaTime;
-//
-            //if (directionChangeTimer > directionChangeTime)
-            //{
-            //    directionChangeTimer = 0f;
-            //    ChangeDirection();
-            //}
-//
-            //var sprites = GetSpritesForDirection(direction);
-            //var frame = Mathf.FloorToInt(_animationTimer / frameLength) % sprites.Length;
-            //_spriteRenderer.sprite = sprites[frame];
-        }
-
-        //private void ChangeDirection()
-        //{
-        //    direction = (Direction)Random.Next(4);
-        //    directionVec = direction switch
-        //    {
-        //        Direction.Up => Vector2.up,
-        //        Direction.Down => Vector2.down,
-        //        Direction.Left => Vector2.left,
-        //        Direction.Right => Vector2.right,
-        //        _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
-        //    };
-        //}
-//
-        //private Sprite[] GetSpritesForDirection(Direction direction)
-        //{
-        //    return direction switch
-        //    {
-        //        Direction.Up => walkUpSprites,
-        //        Direction.Down => walkDownSprites,
-        //        Direction.Left => walkLeftSprites,
-        //        Direction.Right => walkRightSprites,
-        //        _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
-        //    };
-        //}
-
         public void TakeDamage(int damage, GameObject source)
         {
             curHealth -= damage;
             Debug.Log(curHealth);
 
-            if (curHealth <= 0)
-            {
+            if (curHealth>0){
+                animator.Play("Damaged");
+                Vector2 direction = (transform.position-source.transform.position).normalized;
+                rb.AddForce((transform.position-source.transform.position).normalized*knockBack*damage/10, ForceMode2D.Impulse);
+                StartCoroutine(DamagedBehavior());
+                justDamaged = true;
+            }else{
                 Destroy(gameObject);
             }
         }

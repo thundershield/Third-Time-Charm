@@ -105,7 +105,12 @@ MonoBehaviour:
   maxSpeed: 2
   maxHealth: 50
   aggroRange: 20
-  idleRange: 20
+  idleRange: 5
+  knockBackTime: 0.25
+  stunTime: 0.5
+  knockBack: 3
+  curHealth: 0
+  state: 0
   curWaypoint: 0
   targetWaypoint: 0
 --- !u!50 &4066378823516231431

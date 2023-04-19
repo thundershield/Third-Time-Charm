@@ -103,6 +103,10 @@ MonoBehaviour:
   target: {fileID: 0}
   maxSpeed: 2
   maxHealth: 50
+  aggroRange: 20
+  idleRange: 20
+  curWaypoint: 0
+  targetWaypoint: 0
 --- !u!50 &4066378823516231431
 Rigidbody2D:
   serializedVersion: 4

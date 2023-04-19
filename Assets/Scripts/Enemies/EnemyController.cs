@@ -6,8 +6,6 @@ using Pathfinding;
 
 namespace Enemies
 {
-    [RequireComponent(typeof(SpriteRenderer))]
-    [RequireComponent(typeof(Rigidbody2D))]
     public class EnemyController : MonoBehaviour
     {
         public Transform target; //will usually hold the Transform of the player
@@ -28,9 +26,9 @@ namespace Enemies
         private Vector2 directionVec;
         private float distanceToTarget = 1000; //how far the target is, following the pathToTarget. Initialized to a high value so that default state will be idle
         private float activePathLength = 1000;
-        private Animator animator;
-        private Rigidbody2D rb;
-        private Seeker seeker;
+        [SerializeField] private Animator animator;
+        [SerializeField] private Rigidbody2D rb;
+        [SerializeField] private Seeker seeker;
         private Path pathToTarget; //This will always point towards one of the players. Used for determining distance
         private Path activePath; //This is the actual path the AI will follow
         private float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target
@@ -41,9 +39,9 @@ namespace Enemies
         {
             target = GameObject.Find("Player(Clone)").transform; //this is a temporary measure for testing purposes. Replace with proper system
             //_spriteRenderer = GetComponent<SpriteRenderer>();
-            rb = GetComponent<Rigidbody2D>();
-            seeker = GetComponent<Seeker>();
-            animator = GetComponent<Animator>();
+            //rb = GetComponent<Rigidbody2D>();
+            //seeker = GetComponent<Seeker>();
+            //animator = GetComponent<Animator>();
             timer = Random.Range(1.0f, 4.0f);
             //update your path to the player 10 times a second. A* is pretty efficient and our grid is pretty small, so this isn't too expensive
             InvokeRepeating("FindPathToTarget",0f,.1f);
@@ -171,6 +169,7 @@ namespace Enemies
             rb.velocity = Vector2.zero;
             yield return new WaitForSeconds(stunTime-knockBackTime);
             state = BehaviorState.combat;
+            rb.mass = 1;
         }
         private void DeadState(){
             
@@ -204,6 +203,7 @@ namespace Enemies
                 animator.Play("Damaged");
                 Vector2 direction = (transform.position-source.transform.position).normalized;
                 rb.AddForce((transform.position-source.transform.position).normalized*knockBack*damage/10, ForceMode2D.Impulse);
+                rb.mass = 5;
                 StartCoroutine(DamagedBehavior());
                 justDamaged = true;
             }else{

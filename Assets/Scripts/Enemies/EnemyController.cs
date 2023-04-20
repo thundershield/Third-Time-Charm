@@ -42,6 +42,7 @@ namespace Enemies
         protected float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target
         protected int curWaypoint = 0;
         protected int targetWaypoint = 0;
+        protected Coroutine attack;
         
         protected void Start()
         {
@@ -177,6 +178,7 @@ namespace Enemies
             yield return new WaitForSeconds(windupTime);
             hitBox.enabled = true;
             yield return new WaitForSeconds(attackTime-windupTime);
+            state = BehaviorState.combat;
         }
         //This function should handle returning the enemy to a base state, turning off hitboxes and stuff
         //It's a seperate function so that it can be used when an attack is interrupted
@@ -238,13 +240,20 @@ namespace Enemies
         {
             if(state != BehaviorState.dead){
                 curHealth = curHealth - damage;
-                StopCoroutine("AttackingBehavior");
+                if(attack != null){
+                    StopCoroutine(attack);
+                }
                 activePath = null;//if we have an active path, we're probably going to want a new one after taking damage
                 AttackCleanUp();
                 if (curHealth>0){
+                    state = BehaviorState.damaged;
                     Vector2 direction = (transform.position-source.transform.position).normalized;
-                    //rb.AddForce((transform.position-source.transform.position).normalized*knockBack*damage/10, ForceMode2D.Impulse);
-                    StartCoroutine(DamagedBehavior(direction,damage/10));
+                    if(direction.x < 0 ){
+                        transform.localRotation = Quaternion.Euler(0, 0, 0);
+                    }else{
+                        transform.localRotation = Quaternion.Euler(0,180,0);
+                    }
+                    attack = StartCoroutine(DamagedBehavior(direction,damage/10));
                     justDamaged = true;
                 }else{
                     state = BehaviorState.dead;

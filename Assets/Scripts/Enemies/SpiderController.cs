@@ -22,7 +22,7 @@ namespace Enemies
                         animator.SetBool("isMoving", false);
                     }else{
                         state = BehaviorState.attacking;
-                        StartCoroutine(AttackingBehavior((Vector2)target.position-rb.position));
+                        attack = StartCoroutine(AttackingBehavior((Vector2)target.position-rb.position));
                         StartCoroutine(AttackCooldown());
                         activePath = null;
                     }

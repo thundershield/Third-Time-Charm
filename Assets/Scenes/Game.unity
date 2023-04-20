@@ -6856,6 +6856,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3224470926865221661, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+      propertyPath: enemyPrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3224470926865221661, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+      propertyPath: enemyPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 4066378823516231430, guid: acdfa130d46806a4984f61768e17f76a, type: 3}
     - target: {fileID: 8148352421484530173, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3623703804

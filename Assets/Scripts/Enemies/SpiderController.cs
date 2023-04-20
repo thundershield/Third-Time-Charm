@@ -6,7 +6,6 @@ namespace Enemies
 {
     public class SpiderController : EnemyController
     {
-        [SerializeField] protected float engagementDistance = 5.0f;//the spider will close to engagement distance before considering anything else
         [SerializeField] protected float jumpRangeMax = 3.0f;
         [SerializeField] protected float jumpRangeMin = 2.0f;
         private Vector2 destination;
@@ -30,7 +29,7 @@ namespace Enemies
                 //If you aren't in range and don't have a path, make one that will get you in range
                 }else if(activePath == null){
                     if(seeker.IsDone()){
-                        destination = GetOffAngleVector(target.position,rb.position)*jumpRangeMin*1.4f*-1+(Vector2)target.position;
+                        destination = GetOffAngleVector(target.position,rb.position,45)*jumpRangeMin*1.4f*-1+(Vector2)target.position;
                         if(IsPathPossible(rb.position, destination))//if the path isn't valid, try again
                             seeker.StartPath(rb.position, destination, ActivePathFound);
                     }
@@ -46,10 +45,10 @@ namespace Enemies
                 }
             }
         }
-        //returns a unit vector that is within 45 degrees of a line between two points
-        private Vector2 GetOffAngleVector(Vector2 origin, Vector2 endPoint){
+        //returns a unit vector that is within a specified number of degrees of a line between two points
+        private Vector2 GetOffAngleVector(Vector2 origin, Vector2 endPoint, int degrees){
             Vector2 shiftedVector = (origin-endPoint).normalized;
-            shiftedVector = Quaternion.Euler(0,0,Random.Range(-45,45))*shiftedVector;
+            shiftedVector = Quaternion.Euler(0,0,Random.Range(-degrees,degrees))*shiftedVector;
             return shiftedVector;
         }
         //The spiders attack consists of a lunging jump in a specified direction

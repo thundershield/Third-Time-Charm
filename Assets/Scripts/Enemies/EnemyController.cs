@@ -14,6 +14,7 @@ namespace Enemies
         [SerializeField] protected float maxSpeed = 2.0f;
         [SerializeField] protected int maxHealth = 50;
         [SerializeField] protected int aggroRange = 20; //how close the player needs to get to aggro this enemy
+        [SerializeField] protected float engagementDistance = 5.0f; //How close to get to the target before doing any more complex calculations. Many specific enemies use it
         [SerializeField] protected int idleRange = 5; //How far the AI will wander when idling
         [SerializeField] protected float knockBackTime = 0.25f; //how long the enemy will move back from being hit. This should be less then the stunTime
         [SerializeField] protected float stunTime = 0.5f; //how long the enemy will be stunned after being hit. This should be equal to the length of the stun animation
@@ -238,6 +239,7 @@ namespace Enemies
             if(state != BehaviorState.dead){
                 curHealth = curHealth - damage;
                 StopCoroutine("AttackingBehavior");
+                activePath = null;//if we have an active path, we're probably going to want a new one after taking damage
                 AttackCleanUp();
                 if (curHealth>0){
                     Vector2 direction = (transform.position-source.transform.position).normalized;

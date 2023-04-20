@@ -20,6 +20,8 @@ namespace Enemies
         [SerializeField] protected float knockBack = 3.0f; //how far back the enemy will be knocked after being hit
         [SerializeField] protected float windupTime = 0.25f; //How long the enemy spends winding up before attacking
         [SerializeField] protected float attackTime = 1f; //how long it takes for an attack to fully complete, including windup time
+        [SerializeField] protected float attackCooldown = 2f; //How long it takes to play the death animation
+        protected bool isAttackOnCooldown = false; //How long it takes to play the death animation
         [SerializeField] protected float deathTime = 1f; //How long it takes to play the death animation
         [SerializeField] protected int curHealth;
         [SerializeField] protected Collider2D hitBox;
@@ -33,6 +35,7 @@ namespace Enemies
         [SerializeField] protected Animator animator;
         [SerializeField] protected Rigidbody2D rb;
         [SerializeField] protected Seeker seeker;
+        [SerializeField] protected Collider2D EnemyCollider;//Reference used to disable it when it dies
         protected Path pathToTarget; //This will always point towards one of the players. Used for determining distance
         protected Path activePath; //This is the actual path the AI will follow
         protected float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target
@@ -177,15 +180,14 @@ namespace Enemies
         protected virtual void AttackCleanUp(){
             hitBox.enabled = false;
         }
+        protected virtual IEnumerator AttackCooldown(){
+            isAttackOnCooldown = true;
+            yield return new WaitForSeconds(attackCooldown);
+            isAttackOnCooldown = false;
+        }
         protected virtual void DamagedState(){
             //Damaged state is purposefully empty as DamagedBehavior takes care of the transition
         }
-        //protected virtual IEnumerator DamagedBehavior(){
-        //    yield return new WaitForSeconds(knockBackTime);
-        //    rb.velocity = Vector2.zero;
-        //    yield return new WaitForSeconds(stunTime-knockBackTime);
-        //    state = BehaviorState.combat;
-        //}
         protected virtual IEnumerator DamagedBehavior(Vector2 direction, float force){
             timer = knockBackTime;
             animator.Play("Damaged");
@@ -202,7 +204,8 @@ namespace Enemies
         }
         protected virtual IEnumerator DeadBehavior(){
             animator.Play("Death");
-            yield return new WaitForSeconds(1);
+            EnemyCollider.enabled = false;
+            yield return new WaitForSeconds(deathTime);
             Destroy(gameObject);
         }
         //Moves towards a given waypoint on a path and returns whatever waypoint you are now on
@@ -210,9 +213,9 @@ namespace Enemies
             animator.SetBool("isMoving", true);
             directionVec = ((Vector2)path.vectorPath[waypoint] - rb.position).normalized;//get the normalized vector pointing towards the active waypoint
             rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);//move towards it. Time.fixedDeltaTime keeps speed consistent even with lag
-            if(directionVec.x > 0 ){
+            if(directionVec.x > 0.1 ){
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
-            }else{
+            }else if(directionVec.x < -0.1){
                 transform.localRotation = Quaternion.Euler(0,180,0);
             }
             //Increments the target waypoint if we reached it. Sadly since you can't just add a bool to an int it requires an if statement
@@ -224,24 +227,21 @@ namespace Enemies
         }
         public void TakeDamage(int damage, GameObject source)
         {
-            curHealth -= damage;
-            Debug.Log(curHealth);
             StopCoroutine("AttackingBehavior");
-            AttackCleanUp();
-            if (curHealth>0){
-                Vector2 direction = (transform.position-source.transform.position).normalized;
-                //rb.AddForce((transform.position-source.transform.position).normalized*knockBack*damage/10, ForceMode2D.Impulse);
-                StartCoroutine(DamagedBehavior(direction,damage/10));
-                justDamaged = true;
-            }else if(state != BehaviorState.dead){
-                state = BehaviorState.dead;
-                StartCoroutine(DeadBehavior());
+            if(state != BehaviorState.dead){
+                curHealth = curHealth - damage;
+                StopCoroutine("AttackingBehavior");
+                AttackCleanUp();
+                if (curHealth>0){
+                    Vector2 direction = (transform.position-source.transform.position).normalized;
+                    //rb.AddForce((transform.position-source.transform.position).normalized*knockBack*damage/10, ForceMode2D.Impulse);
+                    StartCoroutine(DamagedBehavior(direction,damage/10));
+                    justDamaged = true;
+                }else{
+                    state = BehaviorState.dead;
+                    StartCoroutine(DeadBehavior());
+                }
             }
-        }
-        private void OnTriggerStay2D(Collider2D other)
-        {
-            if (!other.CompareTag("Enemy")) return;
-            Debug.Log("Enemy Collision");
         }
     }
 }

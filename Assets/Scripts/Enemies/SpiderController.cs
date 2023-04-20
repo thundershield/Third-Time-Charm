@@ -16,9 +16,14 @@ namespace Enemies
             }else{
                 float distanceToTarget = ((Vector2)target.position - rb.position).magnitude;
                 if(distanceToTarget < jumpRangeMax && distanceToTarget > jumpRangeMin){
-                    state = BehaviorState.attacking;
-                    StartCoroutine(AttackingBehavior((Vector2)target.position-rb.position));
-                    activePath = null;
+                    if(isAttackOnCooldown){
+                        animator.SetBool("isMoving", false);
+                    }else{
+                        state = BehaviorState.attacking;
+                        StartCoroutine(AttackingBehavior((Vector2)target.position-rb.position));
+                        StartCoroutine(AttackCooldown());
+                        activePath = null;
+                    }
                 }else if(activePath == null){
                     if(seeker.IsDone()){
                         //find the closest point to the target within range
@@ -46,14 +51,12 @@ namespace Enemies
             animator.Play("Attack");
             yield return new WaitForSeconds(windupTime);
             timer = attackTime-windupTime;
+            hitBox.enabled = true;
             while(timer > 0){
                 rb.MovePosition(rb.position + direction * 3 * Time.fixedDeltaTime);
                 timer = timer - Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
-            rb.AddForce((transform.position-target.position).normalized*5, ForceMode2D.Impulse);
-            hitBox.enabled = true;
-            yield return new WaitForSeconds(attackTime-windupTime);
             state = BehaviorState.combat;
             AttackCleanUp();
         }

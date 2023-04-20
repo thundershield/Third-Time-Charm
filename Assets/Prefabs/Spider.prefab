@@ -131,7 +131,7 @@ MonoBehaviour:
   rb: {fileID: 4066378823516231431}
   seeker: {fileID: -3432230869083969228}
   EnemyCollider: {fileID: 484568852934352841}
-  engagementDistance: 10
+  engagementDistance: 5
   jumpRangeMax: 3
   jumpRangeMin: 2
 --- !u!50 &4066378823516231431

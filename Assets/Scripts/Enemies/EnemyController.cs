@@ -55,13 +55,13 @@ namespace Enemies
             curHealth = maxHealth;
         }
         protected void FindPathToTarget(){
-            if(seeker.IsDone()&&(PathUtilities.IsPathPossible(AstarPath.active.GetNearest(rb.position).node,AstarPath.active.GetNearest(target.position).node))){//check that we're not already finding a path
+            if(seeker.IsDone()&&(IsPathPossible(rb.position, target.position))){//check that we're not already finding a path
                 seeker.StartPath(rb.position, target.position, TargetPathFound);
             }
         }
         protected void TargetPathFound(Path newPath)
         {
-            if(!newPath.error&&PathUtilities.IsPathPossible(newPath.path)){
+            if(!newPath.error){
                 pathToTarget = newPath;
                 pathToTargetLength = newPath.GetTotalLength();
                 //targetWaypoint = 0;
@@ -134,7 +134,7 @@ namespace Enemies
                 }
             }
             else{
-                if(activePathLength > idleRange&&PathUtilities.IsPathPossible(activePath.path)){//if the path turned out to be too long when its actual distance was measured, ditch it
+                if(activePathLength > idleRange){//if the path turned out to be too long when its actual distance was measured, ditch it
                     activePath = null;
                     return;
                 }
@@ -154,6 +154,7 @@ namespace Enemies
                 CombatBehaviorCleanup();
             }
         }
+        //default combat behavior is just to move towards the player, but this will be replaced most of the time
         protected virtual void CombatBehavior(){
             if(pathToTarget != null){
                 if (targetWaypoint >= pathToTarget.vectorPath.Count) {
@@ -162,10 +163,11 @@ namespace Enemies
                 targetWaypoint = MoveAlongPath(pathToTarget, targetWaypoint);
             }
         }
+        //May be needed for some enemies
         protected virtual void CombatBehaviorCleanup(){
         }
+        //AttackingState is purposefully empty as how it triggers varies by enemy
         protected virtual void AttackingState(){
-            //AttackingState is purposefully empty as AttackCleanUp takes care of the transition
         }
         //This should almost always be overwritten by the enemies unique controller
         protected virtual IEnumerator AttackingBehavior(Vector2 direction){
@@ -180,14 +182,16 @@ namespace Enemies
         protected virtual void AttackCleanUp(){
             hitBox.enabled = false;
         }
+        //Handles the delay before an enemy can attack again
         protected virtual IEnumerator AttackCooldown(){
             isAttackOnCooldown = true;
             yield return new WaitForSeconds(attackCooldown);
             isAttackOnCooldown = false;
         }
+        //Damaged state is purposefully empty as DamagedBehavior takes care of the transition
         protected virtual void DamagedState(){
-            //Damaged state is purposefully empty as DamagedBehavior takes care of the transition
         }
+        //Calculates and applies knockback
         protected virtual IEnumerator DamagedBehavior(Vector2 direction, float force){
             timer = knockBackTime;
             animator.Play("Damaged");
@@ -199,9 +203,11 @@ namespace Enemies
             yield return new WaitForSeconds(stunTime-knockBackTime);
             state = BehaviorState.combat;
         }
+        //Dead state is purposefully empty as TakeDamage takes care of the transition
         protected virtual void DeadState(){
             
         }
+        //plays the death animation and disables several parts of the enemy
         protected virtual IEnumerator DeadBehavior(){
             animator.Play("Death");
             EnemyCollider.enabled = false;
@@ -213,6 +219,7 @@ namespace Enemies
             animator.SetBool("isMoving", true);
             directionVec = ((Vector2)path.vectorPath[waypoint] - rb.position).normalized;//get the normalized vector pointing towards the active waypoint
             rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);//move towards it. Time.fixedDeltaTime keeps speed consistent even with lag
+            //Flip the enemy if they are moving left. The small gap around 0 prevents the enemy from rapidly changing its direction
             if(directionVec.x > 0.1 ){
                 transform.localRotation = Quaternion.Euler(0, 0, 0);
             }else if(directionVec.x < -0.1){
@@ -225,9 +232,9 @@ namespace Enemies
                 return waypoint;
             }
         }
+        //Called from other objects to do damage to the enemy. Applies damage and knockback
         public void TakeDamage(int damage, GameObject source)
         {
-            StopCoroutine("AttackingBehavior");
             if(state != BehaviorState.dead){
                 curHealth = curHealth - damage;
                 StopCoroutine("AttackingBehavior");
@@ -242,6 +249,10 @@ namespace Enemies
                     StartCoroutine(DeadBehavior());
                 }
             }
+        }
+        //A simple wrapper function that allows IsPathPossible to take two Vector2s
+        public bool IsPathPossible(Vector2 start, Vector2 end){
+            return PathUtilities.IsPathPossible(AstarPath.active.GetNearest(start).node,AstarPath.active.GetNearest(end).node);
         }
     }
 }

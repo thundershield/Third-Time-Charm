@@ -10,10 +10,13 @@ namespace Enemies
         [SerializeField] protected float jumpRangeMax = 3.0f;
         [SerializeField] protected float jumpRangeMin = 2.0f;
         private Vector2 destination;
+        //The intended combat behavior for spiders is to get within a specified range of the player, jump at them, and repeat
         protected override void CombatBehavior(){
+            //before doing anything complex just close distance
             if(pathToTargetLength > engagementDistance){
                 targetWaypoint = MoveAlongPath(pathToTarget, targetWaypoint);
             }else{
+                //check if the player is within range of your jump attack and execute it if they are
                 float distanceToTarget = ((Vector2)target.position - rb.position).magnitude;
                 if(distanceToTarget < jumpRangeMax && distanceToTarget > jumpRangeMin){
                     if(isAttackOnCooldown){
@@ -24,14 +27,15 @@ namespace Enemies
                         StartCoroutine(AttackCooldown());
                         activePath = null;
                     }
+                //If you aren't in range and don't have a path, make one that will get you in range
                 }else if(activePath == null){
                     if(seeker.IsDone()){
-                        //find the closest point to the target within range
-                        destination = ((Vector2)target.position-rb.position).normalized*jumpRangeMin*1.4f*-1+(Vector2)target.position;
-                        seeker.StartPath(rb.position, destination, ActivePathFound);
+                        destination = GetOffAngleVector(target.position,rb.position)*jumpRangeMin*1.4f*-1+(Vector2)target.position;
+                        if(IsPathPossible(rb.position, destination))//if the path isn't valid, try again
+                            seeker.StartPath(rb.position, destination, ActivePathFound);
                     }
                 }else{
-                    //if the destination is outside of the jump range we need a new one
+                    //if our originally selected destination has moved out of range, abandon it
                     float difference = ((Vector2)target.position-destination).magnitude;
                     if(difference>jumpRangeMax||difference<jumpRangeMin){
                         activePath = null;
@@ -42,6 +46,13 @@ namespace Enemies
                 }
             }
         }
+        //returns a unit vector that is within 45 degrees of a line between two points
+        private Vector2 GetOffAngleVector(Vector2 origin, Vector2 endPoint){
+            Vector2 shiftedVector = (origin-endPoint).normalized;
+            shiftedVector = Quaternion.Euler(0,0,Random.Range(-45,45))*shiftedVector;
+            return shiftedVector;
+        }
+        //The spiders attack consists of a lunging jump in a specified direction
         protected override IEnumerator AttackingBehavior(Vector2 direction){
             if(direction.x > 0 ){
                 transform.localRotation = Quaternion.Euler(0, 0, 0);

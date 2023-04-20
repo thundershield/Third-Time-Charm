@@ -1,5 +1,53 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3194326015042764595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2128053827088084980}
+  - component: {fileID: 4513113152682953462}
+  m_Layer: 8
+  m_Name: HitBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2128053827088084980
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3194326015042764595}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4066378823516231427}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &4513113152682953462
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3194326015042764595}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &4066378823516231430
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,11 +57,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4066378823516231427}
-  - component: {fileID: 4066378823516231425}
+  - component: {fileID: 4829209369512025966}
   - component: {fileID: 4066378823516231431}
   - component: {fileID: 484568852934352841}
   - component: {fileID: -3432230869083969228}
-  m_Layer: 6
+  - component: {fileID: -5896399896102344712}
+  m_Layer: 8
   m_Name: Spider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -33,10 +82,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3673112740428748119}
+  - {fileID: 2128053827088084980}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4066378823516231425
+--- !u!114 &4829209369512025966
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +95,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4066378823516231430}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9c52e01b84247acad3a8ada7b5ba15d, type: 3}
+  m_Script: {fileID: 11500000, guid: 56209eded36d7f84a9e437f161c19363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
@@ -55,14 +105,18 @@ MonoBehaviour:
   idleRange: 5
   knockBackTime: 0.25
   stunTime: 0.5
-  knockBack: 3
+  knockBack: 6
+  windupTime: 0.375
+  attackTime: 0.75
   curHealth: 0
+  hitBox: {fileID: 4513113152682953462}
   state: 0
   animator: {fileID: 7475422827952655251}
   rb: {fileID: 4066378823516231431}
   seeker: {fileID: -3432230869083969228}
-  curWaypoint: 0
-  targetWaypoint: 0
+  engagementDistance: 10
+  jumpRangeMax: 3
+  jumpRangeMin: 2
 --- !u!50 &4066378823516231431
 Rigidbody2D:
   serializedVersion: 4
@@ -76,8 +130,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDrag: 1000
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -128,6 +182,28 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
+--- !u!114 &-5896399896102344712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4066378823516231430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb6a34d769a1e4ac7b0b30e433aa443c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  smoothType: 0
+  subdivisions: 2
+  iterations: 2
+  strength: 0.25
+  uniformLength: 1
+  maxSegmentLength: 0.5
+  bezierTangentLength: 0.4
+  offset: 0.2
+  factor: 0.1
 --- !u!1 &8254836901631112714
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,7 +215,7 @@ GameObject:
   - component: {fileID: 3673112740428748119}
   - component: {fileID: 6348864850285799733}
   - component: {fileID: 7475422827952655251}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: SpiderVisuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,7 +278,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1770277601, guid: b74f63c94ad2eba46bab8f8e171e66d1, type: 3}
+  m_Sprite: {fileID: 902660881, guid: b74f63c94ad2eba46bab8f8e171e66d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

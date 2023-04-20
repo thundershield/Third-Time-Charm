@@ -9,33 +9,37 @@ namespace Enemies
     public class EnemyController : MonoBehaviour
     {
         public Transform target; //will usually hold the Transform of the player
-        //[SerializeField] private float frameLength = 0.2f;
-        //[SerializeField] private float directionChangeTime = 1.5f;
-        [SerializeField] private float maxSpeed = 20.0f;
-        [SerializeField] private int maxHealth = 50;
-        [SerializeField] private int aggroRange = 20; //how close the player needs to get to aggro this enemy
-        [SerializeField] private int idleRange = 10; //How far the AI will wander when idling
-        [SerializeField] private float knockBackTime = 0.25f; //how long the enemy will move back from being hit. This should be less then the stunTime
-        [SerializeField] private float stunTime = 0.5f; //how long the enemy will be stunned after being hit. This should be equal to the length of the stun animation
-        [SerializeField] private float knockBack = 3.0f; //how far back the enemy will be knocked after being hit
-        [SerializeField] private int curHealth;
-        private float timer = 0; //a basic timer variable used for various states
-        private bool justDamaged = false;
+        //[SerializeField] protected float frameLength = 0.2f;
+        //[SerializeField] protected float directionChangeTime = 1.5f;
+        [SerializeField] protected float maxSpeed = 2.0f;
+        [SerializeField] protected int maxHealth = 50;
+        [SerializeField] protected int aggroRange = 20; //how close the player needs to get to aggro this enemy
+        [SerializeField] protected int idleRange = 5; //How far the AI will wander when idling
+        [SerializeField] protected float knockBackTime = 0.25f; //how long the enemy will move back from being hit. This should be less then the stunTime
+        [SerializeField] protected float stunTime = 0.5f; //how long the enemy will be stunned after being hit. This should be equal to the length of the stun animation
+        [SerializeField] protected float knockBack = 3.0f; //how far back the enemy will be knocked after being hit
+        [SerializeField] protected float windupTime = 0.25f; //How long the enemy spends winding up before attacking
+        [SerializeField] protected float attackTime = 1f; //how long it takes for an attack to fully complete, including windup time
+        [SerializeField] protected float deathTime = 1f; //How long it takes to play the death animation
+        [SerializeField] protected int curHealth;
+        [SerializeField] protected Collider2D hitBox;
+        protected float timer = 0; //a basic timer variable used for various states
+        protected bool justDamaged = false;
 
-        [SerializeField] private BehaviorState state = BehaviorState.idle;
-        private Vector2 directionVec;
-        private float distanceToTarget = 1000; //how far the target is, following the pathToTarget. Initialized to a high value so that default state will be idle
-        private float activePathLength = 1000;
-        [SerializeField] private Animator animator;
-        [SerializeField] private Rigidbody2D rb;
-        [SerializeField] private Seeker seeker;
-        private Path pathToTarget; //This will always point towards one of the players. Used for determining distance
-        private Path activePath; //This is the actual path the AI will follow
-        private float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target
-        public int curWaypoint = 0;
-        public int targetWaypoint = 0;
+        [SerializeField] protected BehaviorState state = BehaviorState.idle;
+        protected Vector2 directionVec;
+        protected float pathToTargetLength = 1000; //how far the target is, following the pathToTarget. Initialized to a high value so that default state will be idle
+        protected float activePathLength = 1000;
+        [SerializeField] protected Animator animator;
+        [SerializeField] protected Rigidbody2D rb;
+        [SerializeField] protected Seeker seeker;
+        protected Path pathToTarget; //This will always point towards one of the players. Used for determining distance
+        protected Path activePath; //This is the actual path the AI will follow
+        protected float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target
+        protected int curWaypoint = 0;
+        protected int targetWaypoint = 0;
         
-        private void Start()
+        protected void Start()
         {
             target = GameObject.Find("Player(Clone)").transform; //this is a temporary measure for testing purposes. Replace with proper system
             //_spriteRenderer = GetComponent<SpriteRenderer>();
@@ -46,22 +50,21 @@ namespace Enemies
             //update your path to the player 10 times a second. A* is pretty efficient and our grid is pretty small, so this isn't too expensive
             InvokeRepeating("FindPathToTarget",0f,.1f);
             curHealth = maxHealth;
-            seeker.StartPath(rb.position, target.position, TargetPathFound);
         }
-        void FindPathToTarget(){
-            if(seeker.IsDone()){//check that we're not already finding a path
+        protected void FindPathToTarget(){
+            if(seeker.IsDone()&&(PathUtilities.IsPathPossible(AstarPath.active.GetNearest(rb.position).node,AstarPath.active.GetNearest(target.position).node))){//check that we're not already finding a path
                 seeker.StartPath(rb.position, target.position, TargetPathFound);
             }
         }
-        void TargetPathFound(Path newPath)
+        protected void TargetPathFound(Path newPath)
         {
             if(!newPath.error&&PathUtilities.IsPathPossible(newPath.path)){
                 pathToTarget = newPath;
-                distanceToTarget = newPath.GetTotalLength();
+                pathToTargetLength = newPath.GetTotalLength();
                 //targetWaypoint = 0;
             }
         }
-        void ActivePathFound(Path newPath)
+        protected void ActivePathFound(Path newPath)
         {
             if(!newPath.error){
                 activePath = newPath;
@@ -70,7 +73,7 @@ namespace Enemies
             }
         }
 
-        private void FixedUpdate()
+        protected void FixedUpdate()
         {
             if(justDamaged){
                 state = BehaviorState.damaged;
@@ -101,14 +104,14 @@ namespace Enemies
         //The AI uses a state machine, where the state functions handles switching states and the behavior functions handle the behavior associated with that state
         //The Behavior and state are seperated so that different enemies AIs can override the behavior without copying the state function
         
-        private void IdleState(){
+        protected virtual void IdleState(){
             IdleBehavior();
-            if(distanceToTarget < aggroRange){
+            if(pathToTargetLength < aggroRange){
                 state = BehaviorState.combat;
             }
         }
         //Default idle behavior is to just find a random point within idle range, move towards it, and then wait 1 to 4 seconds before repeating
-        private void IdleBehavior(){
+        protected virtual void IdleBehavior(){
             if(timer > 0){//Wait until timer is finished
                 timer = timer - Time.fixedDeltaTime;
                 animator.SetBool("isMoving", false);
@@ -140,14 +143,15 @@ namespace Enemies
                 }
             }
         }
-        private void CombatState(){
+        protected virtual void CombatState(){
             CombatBehavior();
-            if(distanceToTarget >= aggroRange){
+            if(pathToTargetLength >= aggroRange){
                 state = BehaviorState.idle;
                 timer = Random.Range(1.0f, 4.0f);
+                CombatBehaviorCleanup();
             }
         }
-        private void CombatBehavior(){
+        protected virtual void CombatBehavior(){
             if(pathToTarget != null){
                 if (targetWaypoint >= pathToTarget.vectorPath.Count) {
                     return;
@@ -155,37 +159,61 @@ namespace Enemies
                 targetWaypoint = MoveAlongPath(pathToTarget, targetWaypoint);
             }
         }
-        private void AttackingState(){
-            
+        protected virtual void CombatBehaviorCleanup(){
         }
-        private void AttackingBehavior(){
-            
+        protected virtual void AttackingState(){
+            //AttackingState is purposefully empty as AttackCleanUp takes care of the transition
         }
-        private void DamagedState(){
+        //This should almost always be overwritten by the enemies unique controller
+        protected virtual IEnumerator AttackingBehavior(Vector2 direction){
+            animator.Play("Attack");
+            //rb.velocity = Vector2.zero;
+            yield return new WaitForSeconds(windupTime);
+            hitBox.enabled = true;
+            yield return new WaitForSeconds(attackTime-windupTime);
+        }
+        //This function should handle returning the enemy to a base state, turning off hitboxes and stuff
+        //It's a seperate function so that it can be used when an attack is interrupted
+        protected virtual void AttackCleanUp(){
+            hitBox.enabled = false;
+        }
+        protected virtual void DamagedState(){
             //Damaged state is purposefully empty as DamagedBehavior takes care of the transition
         }
-        IEnumerator DamagedBehavior(){
-            yield return new WaitForSeconds(knockBackTime);
-            rb.velocity = Vector2.zero;
+        //protected virtual IEnumerator DamagedBehavior(){
+        //    yield return new WaitForSeconds(knockBackTime);
+        //    rb.velocity = Vector2.zero;
+        //    yield return new WaitForSeconds(stunTime-knockBackTime);
+        //    state = BehaviorState.combat;
+        //}
+        protected virtual IEnumerator DamagedBehavior(Vector2 direction, float force){
+            timer = knockBackTime;
+            animator.Play("Damaged");
+            while(timer > 0){
+                rb.MovePosition(rb.position + direction * knockBack * Time.fixedDeltaTime*force*timer/knockBackTime);
+                timer = timer - Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+            }
             yield return new WaitForSeconds(stunTime-knockBackTime);
             state = BehaviorState.combat;
-            rb.mass = 1;
         }
-        private void DeadState(){
+        protected virtual void DeadState(){
             
         }
-        private void DeadBehavior(){
-            
+        protected virtual IEnumerator DeadBehavior(){
+            animator.Play("Death");
+            yield return new WaitForSeconds(1);
+            Destroy(gameObject);
         }
         //Moves towards a given waypoint on a path and returns whatever waypoint you are now on
-        private int MoveAlongPath(Path path, int waypoint){
+        protected int MoveAlongPath(Path path, int waypoint){
             animator.SetBool("isMoving", true);
             directionVec = ((Vector2)path.vectorPath[waypoint] - rb.position).normalized;//get the normalized vector pointing towards the active waypoint
             rb.MovePosition(rb.position + directionVec * maxSpeed * Time.fixedDeltaTime);//move towards it. Time.fixedDeltaTime keeps speed consistent even with lag
             if(directionVec.x > 0 ){
-                transform.localScale = new Vector3(1,1,1);
+                transform.localRotation = Quaternion.Euler(0, 0, 0);
             }else{
-                transform.localScale = new Vector3(-1,1,1);
+                transform.localRotation = Quaternion.Euler(0,180,0);
             }
             //Increments the target waypoint if we reached it. Sadly since you can't just add a bool to an int it requires an if statement
             if(((rb.position - (Vector2)path.vectorPath[waypoint]).magnitude)<wayPointDistanceThreshold){
@@ -198,17 +226,22 @@ namespace Enemies
         {
             curHealth -= damage;
             Debug.Log(curHealth);
-
+            StopCoroutine("AttackingBehavior");
+            AttackCleanUp();
             if (curHealth>0){
-                animator.Play("Damaged");
                 Vector2 direction = (transform.position-source.transform.position).normalized;
-                rb.AddForce((transform.position-source.transform.position).normalized*knockBack*damage/10, ForceMode2D.Impulse);
-                rb.mass = 5;
-                StartCoroutine(DamagedBehavior());
+                //rb.AddForce((transform.position-source.transform.position).normalized*knockBack*damage/10, ForceMode2D.Impulse);
+                StartCoroutine(DamagedBehavior(direction,damage/10));
                 justDamaged = true;
-            }else{
-                Destroy(gameObject);
+            }else if(state != BehaviorState.dead){
+                state = BehaviorState.dead;
+                StartCoroutine(DeadBehavior());
             }
+        }
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (!other.CompareTag("Enemy")) return;
+            Debug.Log("Enemy Collision");
         }
     }
 }

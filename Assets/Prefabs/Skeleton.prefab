@@ -106,8 +106,16 @@ MonoBehaviour:
   maxHealth: 50
   aggroRange: 20
   idleRange: 20
-  curWaypoint: 0
-  targetWaypoint: 0
+  knockBackTime: 0.25
+  stunTime: 0.5
+  knockBack: 3
+  windupTime: 0.25
+  attackTime: 1
+  curHealth: 0
+  state: 0
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  seeker: {fileID: 0}
 --- !u!50 &4066378823516231431
 Rigidbody2D:
   serializedVersion: 4

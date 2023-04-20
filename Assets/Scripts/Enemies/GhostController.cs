@@ -80,6 +80,7 @@ namespace Enemies
                 transform.localRotation = Quaternion.Euler(0,180,0);
             }
             yield return new WaitForSeconds(windupTime);
+            //Create the projectile and launch it at the target
             GameObject newProjectile = Instantiate(projectile,hitBox.gameObject.transform.position,Quaternion.identity); 
             newProjectile.GetComponent<Rigidbody2D>().AddForce(((Vector2)target.position-rb.position).normalized*4,ForceMode2D.Impulse);
             yield return new WaitForSeconds(attackTime-windupTime);

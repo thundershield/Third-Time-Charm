@@ -198,6 +198,26 @@ namespace LevelGeneration
             "..........")
         };
 
+        public static readonly Room[] BossArena =
+        {
+            new (RoomCategory.Indoor, "" +
+                "####OO#######OO####" +
+                "#_________________#" +
+                "^.________________#" +
+                "^.._______________#" +
+                "^.________________#" +
+                "#_________________#" +
+                "O_________________O" +
+                "#_________________#" +
+                "#_________________#" +
+                "#________________.^" +
+                "#_______________..^" +
+                "#_______________..^" +
+                "#_________________#" +
+                "O_________________O" +
+                "####OO#######OO####")
+        };
+
         public static bool IsTileCategoryValidDoorway(TileCategory category)
         {
             return category is TileCategory.Floor or TileCategory.Ground or TileCategory.OpenDoor;

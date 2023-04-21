@@ -18,15 +18,11 @@ namespace LevelGeneration
             ClearRoomTypes();
             ChooseRooms(random);
             GenerateBorder(random, map, tileCategories);
-            var enemyPositions = GenerateRooms(random, map, tileCategories);
-
-            LastLoadData = new LevelLoadData
-            {
-                StartPosition = StartPosition,
-                EndPosition = EndPosition,
-                EnemyPositions = enemyPositions,
-                Size = size
-            };
+            var loadData = GenerateRooms(random, map, tileCategories);
+            loadData.Size = size;
+            loadData.StartPosition = StartPosition;
+            loadData.EndPosition = EndPosition;
+            LastLoadData = loadData;
 
             return LastLoadData;
         }
@@ -42,7 +38,13 @@ namespace LevelGeneration
             AllOpenExit,
             LeftRightOpen,
             AllOpen,
-            Optional
+            Optional,
+            // The boss room takes up four spaces,
+            // one is the room itself, and the other
+            // three are reserved and will be generated
+            // over by the main boss room.
+            Boss,
+            BossReserved,
         }
 
         public Vector2 StartPosition { get; private set; }
@@ -54,7 +56,9 @@ namespace LevelGeneration
             { RoomType.LeftRightOpen, 1 },
             { RoomType.AllOpen, 2 },
             { RoomType.AllOpenSpawn, 3 },
-            { RoomType.AllOpenExit, 3 }
+            { RoomType.AllOpenExit, 3 },
+            { RoomType.Boss, 3 },
+            { RoomType.BossReserved, 3 }
         };
         
         private const int MapSize = 10;
@@ -98,7 +102,7 @@ namespace LevelGeneration
             return Rooms[x + y * MapSize];
         }
         
-        private void AddRoomEnemyPosition(Random random, Map map, int roomX, int roomY, List<SpawnPosition> enemyPositions)
+        private void AddRoomEnemyPosition(Random random, Map map, int roomX, int roomY, LevelLoadData loadData)
         {
             if (random.Next(RoomsPerEnemySpawn) != 0) return;
 
@@ -113,7 +117,7 @@ namespace LevelGeneration
 
                 if (map.IsTileOccupied(enemyX, enemyY)) continue;
 
-                enemyPositions.Add(new SpawnPosition
+                loadData.EnemyPositions.Add(new SpawnPosition
                 {
                     Position = new Vector2(enemyX + 0.5f, enemyY + 0.5f),
                     SpawnData = random.Next()
@@ -129,6 +133,11 @@ namespace LevelGeneration
             for (var y = 0; y < MapSize; y++)
             {
                 var roomType = GetRoom(x, y);
+
+                if (roomType == RoomType.BossReserved)
+                {
+                    continue;
+                }
                 
                 var room = (roomType switch
                 {
@@ -136,6 +145,7 @@ namespace LevelGeneration
                     RoomType.AllOpen => LevelGeneration.Rooms.AllOpen,
                     RoomType.AllOpenSpawn => LevelGeneration.Rooms.AllOpenSpawn,
                     RoomType.AllOpenExit => LevelGeneration.Rooms.AllOpenExit,
+                    RoomType.Boss => LevelGeneration.Rooms.BossArena,
                     _ => LevelGeneration.Rooms.Optional
                 }).Choose(random);
 
@@ -146,19 +156,28 @@ namespace LevelGeneration
                 
                 roomTemplates[room.Category].Add(new RoomTemplate(room, roomType, new Vector2Int(x, y)));
             }
-
+            
             return roomTemplates;
         }
 
-        private void GenerateRoomFromTemplate(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories, RoomTemplate roomTemplate, List<SpawnPosition> enemyPositions)
+        private void GenerateRoomFromTemplate(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories, RoomTemplate roomTemplate, LevelLoadData loadData)
         {
             var roomX = roomTemplate.Position.x * RoomOverlappingWidth;
             var roomY = roomTemplate.Position.y * RoomOverlappingHeight;
 
+            var roomWidth = LevelGeneration.Rooms.RoomWidth;
+            var roomHeight = LevelGeneration.Rooms.RoomHeight;
+
+            if (roomTemplate.RoomType == RoomType.Boss)
+            {
+                roomWidth = roomWidth * 2 - 1;
+                roomHeight = roomHeight * 2 - 1;
+            }
+
             for (var i = 0; i < roomTemplate.Room.Chars.Length; i++)
             {
-                var tileX = i % LevelGeneration.Rooms.RoomWidth;
-                var tileY = LevelGeneration.Rooms.RoomHeight - 1 - i / LevelGeneration.Rooms.RoomWidth;
+                var tileX = i % roomWidth;
+                var tileY = roomHeight - 1 - i / roomWidth;
                 var tileCategory = LevelGeneration.Rooms.CharCategories[roomTemplate.Room.Chars[i]];
                 var tile = tileCategories[tileCategory].Choose(random);
                 var tilePosition = new Vector3Int(roomX + tileX, roomY + tileY, 0);
@@ -180,25 +199,35 @@ namespace LevelGeneration
             // Don't spawn enemies near the player's spawn or exit.
             if (roomTemplate.RoomType is RoomType.AllOpenSpawn or RoomType.AllOpenExit) return;
 
-            AddRoomEnemyPosition(random, map, roomTemplate.Position.x, roomTemplate.Position.y, enemyPositions);
+            if (roomTemplate.RoomType is RoomType.Boss)
+            {
+                loadData.BossPosition = new Vector2(roomX + LevelGeneration.Rooms.RoomWidth,
+                    roomY + LevelGeneration.Rooms.RoomHeight);
+                return;
+            }
+            
+            AddRoomEnemyPosition(random, map, roomTemplate.Position.x, roomTemplate.Position.y, loadData);
         }
 
-        private List<SpawnPosition> GenerateRooms(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
+        private LevelLoadData GenerateRooms(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
         {
-            var enemyPositions = new List<SpawnPosition>();
+            var loadData = new LevelLoadData()
+            {
+                EnemyPositions = new List<SpawnPosition>(),
+            };
             var roomTemplates = GenerateRoomTemplates(random, map);
 
             foreach (var roomTemplate in roomTemplates[RoomCategory.Outdoor])
             {
-                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, enemyPositions);
+                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, loadData);
             }
             
             foreach (var roomTemplate in roomTemplates[RoomCategory.Indoor])
             {
-                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, enemyPositions);
+                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, loadData);
             }
 
-            return enemyPositions;
+            return loadData;
         }
 
         public void GenerateBorder(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
@@ -255,6 +284,25 @@ namespace LevelGeneration
             }
 
             SetRoom(x, 0, RoomType.AllOpenExit);
+            
+            // Place the boss room, make sure it isn't in the first or last row, which have the start and end rooms.
+            var bossY = random.Next(1, MapSize - 1);
+            var bossX = random.Next(0, MapSize - 1);
+
+            for (var i = 0; i < MapSize; i++)
+            {
+                bossX = (bossX + 1) % (MapSize - 1);
+                
+                // We don't want the boss room to spawn outside of the main path.
+                if (GetRoom(bossX, bossY) == RoomType.Optional) continue;
+                
+                SetRoom(bossX, bossY, RoomType.Boss);
+                SetRoom(bossX + 1, bossY, RoomType.BossReserved);
+                SetRoom(bossX, bossY + 1, RoomType.BossReserved);
+                SetRoom(bossX + 1, bossY + 1, RoomType.BossReserved);
+
+                break;
+            }
         }
     }
 }

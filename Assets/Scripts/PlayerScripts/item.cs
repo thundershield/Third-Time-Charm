@@ -22,6 +22,8 @@ using TMPro;
 		public void updateItem(int newId) {
 			itemInfo info = inventory.queryItem(newId);
 			itemId = newId;
+			Sprite texture = Resources.Load<Sprite>("ItemSprites/" + info.sprite.Trim());
+			gameObject.GetComponent<Image>().sprite = texture;
 		}
 
 		public void OnBeginDrag(PointerEventData eventData) {

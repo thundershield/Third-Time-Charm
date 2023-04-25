@@ -14,9 +14,12 @@ public class rangedItem: usableItem {
 	}
 
 	public override void use() {
-		Vector3 worldPosition = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - player.transform.position).normalized;
-		GameObject arrow = Instantiate(arrowPrefab, player.transform.position + worldPosition * 2, Quaternion.identity);
+		Vector2 worldPosition = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - player.transform.position);
+		worldPosition.Normalize();
+
+		GameObject arrow = Instantiate(arrowPrefab, player.transform.position + new Vector3(worldPosition.x, worldPosition.y,0), Quaternion.identity);
 		arrow.AddComponent(typeof(arrow));
-		arrow.GetComponent<Rigidbody2D>().AddForce(Vector3.Normalize(worldPosition) * 50, ForceMode2D.Impulse);
+		Debug.Log(worldPosition);
+		arrow.GetComponent<Rigidbody2D>().AddForce(new Vector3(worldPosition.x, worldPosition.y,0) * 15, ForceMode2D.Impulse);
 	}
 }

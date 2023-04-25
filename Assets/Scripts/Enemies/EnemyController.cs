@@ -13,16 +13,16 @@ namespace Enemies
         //[SerializeField] protected float directionChangeTime = 1.5f;
         [SerializeField] protected float maxSpeed = 2.0f;
         [SerializeField] protected int maxHealth = 50;
-        [SerializeField] protected int aggroRange = 20; //how close the player needs to get to aggro this enemy
+        [SerializeField] protected int aggroRange = 20;
         [SerializeField] protected float engagementDistance = 5.0f; //How close to get to the target before doing any more complex calculations. Many specific enemies use it
         [SerializeField] protected int idleRange = 5; //How far the AI will wander when idling
         [SerializeField] protected float knockBackTime = 0.25f; //how long the enemy will move back from being hit. This should be less then the stunTime
         [SerializeField] protected float stunTime = 0.5f; //how long the enemy will be stunned after being hit. This should be equal to the length of the stun animation
-        [SerializeField] protected float knockBack = 3.0f; //how far back the enemy will be knocked after being hit
+        [SerializeField] protected float knockBack = 3.0f; //Increases the speed the enemy will be knocked back at
         [SerializeField] protected float windupTime = 0.25f; //How long the enemy spends winding up before attacking
         [SerializeField] protected float attackTime = 1f; //how long it takes for an attack to fully complete, including windup time
-        [SerializeField] protected float attackCooldown = 2f; //How long it takes to play the death animation
-        protected bool isAttackOnCooldown = false; //How long it takes to play the death animation
+        [SerializeField] protected float attackCooldown = 2f;
+        protected bool isAttackOnCooldown = false;
         [SerializeField] protected float deathTime = 1f; //How long it takes to play the death animation
         [SerializeField] protected int curHealth;
         [SerializeField] protected Collider2D hitBox;
@@ -39,7 +39,7 @@ namespace Enemies
         [SerializeField] protected Collider2D EnemyCollider;//Reference used to disable it when it dies
         protected Path pathToTarget; //This will always point towards one of the players. Used for determining distance
         protected Path activePath; //This is the actual path the AI will follow
-        protected float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target
+        protected float wayPointDistanceThreshold = 0.20f; //How close we need to get to the target waypoint before getting a new target waypoint
         protected int curWaypoint = 0;
         protected int targetWaypoint = 0;
         protected Coroutine attack;
@@ -236,7 +236,7 @@ namespace Enemies
             }
         }
         //Called from other objects to do damage to the enemy. Applies damage and knockback
-        public void TakeDamage(int damage, GameObject source)
+        public void TakeDamage(int damage, DamageType type, GameObject source)
         {
             if(state != BehaviorState.dead){
                 curHealth = curHealth - damage;

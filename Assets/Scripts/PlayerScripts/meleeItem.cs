@@ -27,7 +27,7 @@ public class meleeItem: usableItem {
         {
             if (!result.CompareTag("Enemy")) continue;
 
-            result.GetComponent<EnemyController>().TakeDamage(damage, player.gameObject);
+            result.GetComponent<EnemyController>().TakeDamage(damage, DamageType.physical, player.gameObject);
         }
 	}
 }

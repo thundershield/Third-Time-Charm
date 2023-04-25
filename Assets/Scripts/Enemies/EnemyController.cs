@@ -236,7 +236,7 @@ namespace Enemies
             }
         }
         //Called from other objects to do damage to the enemy. Applies damage and knockback
-        public void TakeDamage(int damage, GameObject source)
+        public void TakeDamage(int damage, DamageType type, GameObject source)
         {
             if(state != BehaviorState.dead){
                 curHealth = curHealth - damage;

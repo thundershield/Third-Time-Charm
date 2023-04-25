@@ -48,7 +48,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.45
+  m_Radius: 0.35
 --- !u!114 &4236679164993741166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 533425465504582231}
   - component: {fileID: 7256453591261119139}
   m_Layer: 8
-  m_Name: Spider
+  m_Name: SmallSpider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,14 +114,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  maxSpeed: 2
-  maxHealth: 50
+  maxSpeed: 2.5
+  maxHealth: 30
   aggroRange: 20
-  engagementDistance: 5
+  engagementDistance: 6
   idleRange: 5
   knockBackTime: 0.25
   stunTime: 0.5
-  knockBack: 6
+  knockBack: 8
   windupTime: 0.25
   attackTime: 0.75
   attackCooldown: 2
@@ -170,7 +170,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.9, y: 0.7}
+  m_Size: {x: 0.7, y: 0.6}
   m_Direction: 1
 --- !u!114 &-3432230869083969228
 MonoBehaviour:
@@ -263,7 +263,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1770277601, guid: b74f63c94ad2eba46bab8f8e171e66d1, type: 3}
+  m_Sprite: {fileID: 1385246527, guid: f19dd61b287f5ef43bfc38dff50fc317, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -284,7 +284,7 @@ Animator:
   m_GameObject: {fileID: 4066378823516231430}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 44c64c0272394b143b949e2c8f6a2fd4, type: 2}
+  m_Controller: {fileID: 9100000, guid: 0a5cac69c0ab4914e8cba31419160df7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

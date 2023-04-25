@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 533425465504582231}
   - component: {fileID: 7256453591261119139}
   m_Layer: 8
-  m_Name: Spider
+  m_Name: SaphireElemental
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

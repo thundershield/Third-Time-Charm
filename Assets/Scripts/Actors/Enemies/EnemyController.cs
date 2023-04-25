@@ -24,7 +24,7 @@ namespace Enemies
         [SerializeField] protected float attackCooldown = 2f;
         protected bool isAttackOnCooldown = false;
         [SerializeField] protected float deathTime = 1f; //How long it takes to play the death animation
-        [SerializeField] protected int curHealth;
+        [SerializeField] protected int curHealth = 50;
         [SerializeField] protected Collider2D hitBox;
         protected float timer = 0; //a basic timer variable used for various states
         protected bool justDamaged = false;
@@ -46,14 +46,16 @@ namespace Enemies
         
         protected void Start()
         {
-            target = GameObject.Find("Player(Clone)").transform; //this is a temporary measure for testing purposes. Replace with proper system
+            //target = GameObject.Find("Player(Clone)").transform; //this is a temporary measure for testing purposes. Replace with proper system
             //_spriteRenderer = GetComponent<SpriteRenderer>();
             //rb = GetComponent<Rigidbody2D>();
             //seeker = GetComponent<Seeker>();
             //animator = GetComponent<Animator>();
             timer = Random.Range(1.0f, 4.0f);
             //update your path to the player 10 times a second. A* is pretty efficient and our grid is pretty small, so this isn't too expensive
-            InvokeRepeating("FindPathToTarget",0f,.1f);
+            if(target!=null){
+                InvokeRepeating("FindPathToTarget",0f,.1f);
+            }
             curHealth = maxHealth;
         }
         protected void FindPathToTarget(){
@@ -119,10 +121,10 @@ namespace Enemies
         protected virtual void IdleBehavior(){
             if(timer > 0){//Wait until timer is finished
                 timer = timer - Time.fixedDeltaTime;
-                animator.SetBool("isMoving", false);
+                if(animator!=null) animator.SetBool("isMoving", false);
             }
             else if(activePath == null){//if there is no active path, try to create a new one
-                if(seeker.IsDone()){//don't cancel existing jobs
+                if(seeker!=null && seeker.IsDone()){//don't cancel existing jobs
                     Vector2 randomPoint;
                     GraphNode randomNode;
                     do{
@@ -183,7 +185,7 @@ namespace Enemies
         //This function should handle returning the enemy to a base state, turning off hitboxes and stuff
         //It's a seperate function so that it can be used when an attack is interrupted
         protected virtual void AttackCleanUp(){
-            hitBox.enabled = false;
+            if(hitBox!=null)hitBox.enabled = false;
         }
         //Handles the delay before an enemy can attack again
         protected virtual IEnumerator AttackCooldown(){
@@ -197,9 +199,11 @@ namespace Enemies
         //Calculates and applies knockback
         protected virtual IEnumerator DamagedBehavior(Vector2 direction, float force){
             timer = knockBackTime;
-            animator.Play("Damaged");
+            if(animator!=null){
+                animator.Play("Damaged");
+            }
             while(timer > 0){
-                rb.MovePosition(rb.position + direction * knockBack * Time.fixedDeltaTime*force*timer/knockBackTime);
+                if(rb!=null)rb.MovePosition(rb.position + direction * knockBack * Time.fixedDeltaTime*force*timer/knockBackTime);
                 timer = timer - Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
@@ -212,8 +216,8 @@ namespace Enemies
         }
         //plays the death animation and disables several parts of the enemy
         protected virtual IEnumerator DeadBehavior(){
-            animator.Play("Death");
-            EnemyCollider.enabled = false;
+            if(animator!=null)animator.Play("Death");
+            if(EnemyCollider!=null)EnemyCollider.enabled = false;
             yield return new WaitForSeconds(deathTime);
             Destroy(gameObject);
         }
@@ -253,9 +257,10 @@ namespace Enemies
                     }else{
                         transform.localRotation = Quaternion.Euler(0,180,0);
                     }
-                    attack = StartCoroutine(DamagedBehavior(direction,damage/10));
+                    StartCoroutine(DamagedBehavior(direction,damage/10));
                     justDamaged = true;
                 }else{
+                    curHealth = 0;
                     state = BehaviorState.dead;
                     StartCoroutine(DeadBehavior());
                 }
@@ -267,6 +272,15 @@ namespace Enemies
         }
         public int GetCurHealth(){
             return curHealth;
+        }
+        public BehaviorState GetState(){
+            return state;
+        }
+        public float GetKnockBackTime(){
+            return knockBackTime;
+        }
+        public void InitializeEnemy(){
+            rb = GetComponent<Rigidbody2D>();
         }
     }
 }

@@ -265,5 +265,8 @@ namespace Enemies
         public bool IsPathPossible(Vector2 start, Vector2 end){
             return PathUtilities.IsPathPossible(AstarPath.active.GetNearest(start).node,AstarPath.active.GetNearest(end).node);
         }
+        public int GetCurHealth(){
+            return curHealth;
+        }
     }
 }

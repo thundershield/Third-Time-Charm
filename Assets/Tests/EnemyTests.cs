@@ -10,7 +10,8 @@ namespace Tests
     public class EnemyTests{
         [Test]
         public void ApplyDamage(){
-            
+            var gameObject = new GameObject();
+            //var enemy = gameObject.AddComponent<EnemyController>;
         }
     }
 }

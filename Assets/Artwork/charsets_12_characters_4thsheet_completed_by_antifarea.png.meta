@@ -33,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -70,7 +70,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -10688,9 +10688,9 @@ TextureImporter:
       charsets_12_characters_4thsheet_completed_by_antifarea_337: 1561335158
       charsets_12_characters_4thsheet_completed_by_antifarea_178: 1977806804
       charsets_12_characters_4thsheet_completed_by_antifarea_379: -18469335
-      charsets_12_characters_4thsheet_completed_by_antifarea_266: -676626134
-      charsets_12_characters_4thsheet_completed_by_antifarea_453: -1031397170
       charsets_12_characters_4thsheet_completed_by_antifarea_411: -459818473
+      charsets_12_characters_4thsheet_completed_by_antifarea_453: -1031397170
+      charsets_12_characters_4thsheet_completed_by_antifarea_266: -676626134
       charsets_12_characters_4thsheet_completed_by_antifarea_203: 1685956563
       charsets_12_characters_4thsheet_completed_by_antifarea_389: -2023228187
       charsets_12_characters_4thsheet_completed_by_antifarea_41: 1549728480
@@ -10866,9 +10866,8 @@ TextureImporter:
       charsets_12_characters_4thsheet_completed_by_antifarea_184: -1119351379
       charsets_12_characters_4thsheet_completed_by_antifarea_52: -1522312045
       charsets_12_characters_4thsheet_completed_by_antifarea_329: 58876098
-      charsets_12_characters_4thsheet_completed_by_antifarea_108: -1304448867
       charsets_12_characters_4thsheet_completed_by_antifarea_447: -1943050737
-      charsets_12_characters_4thsheet_completed_by_antifarea_410: 1380744234
+      charsets_12_characters_4thsheet_completed_by_antifarea_108: -1304448867
       charsets_12_characters_4thsheet_completed_by_antifarea_243: 2137897668
       charsets_12_characters_4thsheet_completed_by_antifarea_6: -1834008900
       charsets_12_characters_4thsheet_completed_by_antifarea_12: -1052766478
@@ -10876,6 +10875,7 @@ TextureImporter:
       charsets_12_characters_4thsheet_completed_by_antifarea_118: -56692333
       charsets_12_characters_4thsheet_completed_by_antifarea_418: -1526757379
       charsets_12_characters_4thsheet_completed_by_antifarea_109: 2055792813
+      charsets_12_characters_4thsheet_completed_by_antifarea_410: 1380744234
       charsets_12_characters_4thsheet_completed_by_antifarea_279: 1253708263
       charsets_12_characters_4thsheet_completed_by_antifarea_272: 1734334831
       charsets_12_characters_4thsheet_completed_by_antifarea_285: -2097589688
@@ -10889,15 +10889,15 @@ TextureImporter:
       charsets_12_characters_4thsheet_completed_by_antifarea_26: -143983169
       charsets_12_characters_4thsheet_completed_by_antifarea_250: -136414477
       charsets_12_characters_4thsheet_completed_by_antifarea_473: 574203547
-      charsets_12_characters_4thsheet_completed_by_antifarea_326: 1939961104
       charsets_12_characters_4thsheet_completed_by_antifarea_349: 34725815
+      charsets_12_characters_4thsheet_completed_by_antifarea_326: 1939961104
       charsets_12_characters_4thsheet_completed_by_antifarea_270: -604401163
       charsets_12_characters_4thsheet_completed_by_antifarea_66: 969463083
       charsets_12_characters_4thsheet_completed_by_antifarea_70: -2082927267
       charsets_12_characters_4thsheet_completed_by_antifarea_5: 1766096248
       charsets_12_characters_4thsheet_completed_by_antifarea_103: -1661688894
-      charsets_12_characters_4thsheet_completed_by_antifarea_303: 162204950
       charsets_12_characters_4thsheet_completed_by_antifarea_390: -1665241946
+      charsets_12_characters_4thsheet_completed_by_antifarea_303: 162204950
       charsets_12_characters_4thsheet_completed_by_antifarea_445: 855309706
       charsets_12_characters_4thsheet_completed_by_antifarea_427: -569415552
       charsets_12_characters_4thsheet_completed_by_antifarea_325: -1349437521
@@ -10951,11 +10951,11 @@ TextureImporter:
       charsets_12_characters_4thsheet_completed_by_antifarea_24: -1288520267
       charsets_12_characters_4thsheet_completed_by_antifarea_11: 541242648
       charsets_12_characters_4thsheet_completed_by_antifarea_162: 72590070
+      charsets_12_characters_4thsheet_completed_by_antifarea_483: 859493692
       charsets_12_characters_4thsheet_completed_by_antifarea_145: 1444731458
       charsets_12_characters_4thsheet_completed_by_antifarea_68: -330635143
       charsets_12_characters_4thsheet_completed_by_antifarea_333: 750900183
       charsets_12_characters_4thsheet_completed_by_antifarea_235: -550588725
-      charsets_12_characters_4thsheet_completed_by_antifarea_483: 859493692
       charsets_12_characters_4thsheet_completed_by_antifarea_83: 1128526974
       charsets_12_characters_4thsheet_completed_by_antifarea_267: -334506268
       charsets_12_characters_4thsheet_completed_by_antifarea_35: -236629148

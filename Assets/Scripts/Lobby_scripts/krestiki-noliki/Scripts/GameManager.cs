@@ -21,8 +21,9 @@ namespace TeodorVecerdi {
 
         public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player target, Hashtable changedProps) {
             base.OnPlayerPropertiesUpdate(target, changedProps);
-            foreach (var prop in changedProps) {
-                Debug.Log($"Property {prop.Key} was changed by player {target.NickName}/{target.UserId} to value {prop.Value}");
+            foreach (var prop in changedProps) 
+            {
+                //Debug.Log($"Property {prop.Key} was changed by player {target.NickName}/{target.UserId} to value {prop.Value}");
             }
         }
     }

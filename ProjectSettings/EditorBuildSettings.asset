@@ -14,10 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LobbyMenu.unity
     guid: be8200a558cfff84b8ce074fa6e33558
-  - enabled: 0
-    path: Assets/Scripts/Lobby_scripts/krestiki-noliki/Scenes/1Menu1.unity
-    guid: 36bc2d0fa79850c40b7675604726f56f
   - enabled: 1
     path: Assets/Scripts/Lobby_scripts/krestiki-noliki/Scenes/Main.unity
     guid: 13ed45b8949ec3c408d5b8cf2ef0d483
+  - enabled: 0
+    path: Assets/Scripts/Lobby_scripts/krestiki-noliki/Scenes/1Menu1.unity
+    guid: 36bc2d0fa79850c40b7675604726f56f
   m_configObjects: {}

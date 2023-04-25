@@ -181,6 +181,7 @@ namespace Enemies
             hitBox.enabled = true;
             yield return new WaitForSeconds(attackTime-windupTime);
             state = BehaviorState.combat;
+            AttackCleanUp();
         }
         //This function should handle returning the enemy to a base state, turning off hitboxes and stuff
         //It's a seperate function so that it can be used when an attack is interrupted
@@ -279,8 +280,14 @@ namespace Enemies
         public float GetKnockBackTime(){
             return knockBackTime;
         }
+        public float GetAttackLength(){
+            return attackTime;
+        }
         public void InitializeEnemy(){
             rb = GetComponent<Rigidbody2D>();
+        }
+        public void triggerAttack(){
+            StartCoroutine(AttackingBehavior(new Vector2(1,1)));
         }
     }
 }

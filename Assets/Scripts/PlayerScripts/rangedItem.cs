@@ -19,7 +19,9 @@ public class rangedItem: usableItem {
 
 		GameObject arrow = Instantiate(arrowPrefab, player.transform.position + new Vector3(worldPosition.x, worldPosition.y,0), Quaternion.identity);
 		arrow.AddComponent(typeof(arrow));
-		Debug.Log(worldPosition);
+		var angle = Mathf.Atan2(worldPosition.y, worldPosition.x) * Mathf.Rad2Deg;
+     	arrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle+180));
+		// Debug.Log(direction);
 		arrow.GetComponent<Rigidbody2D>().AddForce(new Vector3(worldPosition.x, worldPosition.y,0) * 15, ForceMode2D.Impulse);
 	}
 }

@@ -1,0 +1,21 @@
+{
+    "name": "Actors",
+    "rootNamespace": "Actors",
+    "references": [
+        "GUID:efa45043feb7e4147a305b73b5cea642",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:9cfba18395e82d14bac946b2501bc787",
+        "GUID:3b8ed52f1b5c64994af4c4e0aa4b6c4b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        "Pathfinding.Ionic.Zip.Reduced.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

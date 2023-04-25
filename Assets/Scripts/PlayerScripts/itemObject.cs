@@ -28,5 +28,11 @@ public class itemObject: MonoBehaviour {
 			text.transform.SetParent(gameObject.transform.root);
 			text.transform.localPosition = new Vector3(0,0,0);
 		}
+		else {
+			Sprite texture = Resources.Load<Sprite>("ItemSprites/" + info.sprite.Trim());
+			gameObject.GetComponent<SpriteRenderer>().sprite = texture;
+			// change size
+
+		}
 	}
 }

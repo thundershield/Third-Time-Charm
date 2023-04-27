@@ -111,7 +111,7 @@ using TMPro;
 
         public void closeInventory() {
             transform.Find("Background").localScale -= new Vector3(0.0f,0.77f,0.0f); 
-            transform.Find("Background").position += new Vector3(0.0f,215f*0.45f,0.0f); 
+            transform.Find("Background").position += new Vector3(0.0f,215f*0.90f,0.0f); 
 
             isOpen = false;
             // Grid
@@ -156,7 +156,7 @@ using TMPro;
 
         public void openInventory() {
             transform.Find("Background").localScale += new Vector3(0.0f,0.77f,0.0f); 
-            transform.Find("Background").position -= new Vector3(0.0f,215f*0.45f,0.0f); 
+            transform.Find("Background").position -= new Vector3(0.0f,215f*0.90f,0.0f); 
 
             isOpen = true;
             // Grid

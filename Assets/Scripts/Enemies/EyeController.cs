@@ -123,10 +123,10 @@ namespace Enemies
             animator.Play("Death");
             EnemyCollider.enabled = false;
             yield return new WaitForSeconds(deathTime);
-            //var itemPrefab = GameObject.Find("Inventory").GetComponent<inventoryMenu>().itemPrefab;
-            //GameObject item =  Instantiate(itemPrefab, transform.position, Quaternion.identity);
-            //item.GetComponent<itemObject>().updateItem(Random.Range(1,6));
-            //Destroy(gameObject);
+            var itemPrefab = GameObject.Find("Inventory").GetComponent<inventoryMenu>().itemPrefab;
+            GameObject item =  Instantiate(itemPrefab, transform.position, Quaternion.identity);
+            item.GetComponent<itemObject>().updateItem(6);
+            Destroy(gameObject);
         }
         private IEnumerator redFlash(){
             Color tint = new Color(1,0.5f,0.5f,1);

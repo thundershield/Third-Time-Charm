@@ -46,7 +46,6 @@ namespace Enemies
         
         protected void Start()
         {
-            target = GameObject.Find("Player(Clone)").transform; //this is a temporary measure for testing purposes. Replace with proper system
             //_spriteRenderer = GetComponent<SpriteRenderer>();
             //rb = GetComponent<Rigidbody2D>();
             //seeker = GetComponent<Seeker>();
@@ -56,7 +55,14 @@ namespace Enemies
             InvokeRepeating("FindPathToTarget",0f,.1f);
             curHealth = maxHealth;
         }
-        protected void FindPathToTarget(){
+        protected void FindPathToTarget()
+        {
+            if (!target)
+            {
+                target = GameObject.FindGameObjectWithTag("Player").transform;
+                return;
+            }
+            
             if(seeker.IsDone()&&(IsPathPossible(rb.position, target.position))){//check that we're not already finding a path
                 seeker.StartPath(rb.position, target.position, TargetPathFound);
             }
@@ -80,6 +86,8 @@ namespace Enemies
 
         protected void FixedUpdate()
         {
+            if (!target) return;
+            
             if(justDamaged){
                 state = BehaviorState.damaged;
                 justDamaged = false;

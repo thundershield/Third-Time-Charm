@@ -32,11 +32,6 @@ namespace LevelGeneration
             _worldGenerator = new GridWorldGenerator();
 
             Generate();
-            //The tilemap collider takes a while to load unless we call this function
-            GetComponent<TilemapCollider2D>().ProcessTilemapChanges();
-            //Using the newly updated tilemap collider we can call the scan function to create a new grid
-            //for enemies to pathfind on
-            AstarPath.active.Scan();
         }
 
         public void Generate()
@@ -46,14 +41,20 @@ namespace LevelGeneration
             foreach (var spawnedObject in _spawnedObjects)
             {
                 if (!spawnedObject) continue;
-                
+
                 Destroy(spawnedObject);
             }
-            
+
             _spawnedObjects.Clear();
             
             var levelLoadData = _worldGenerator.Generate(_random, this, new Vector2Int(64, 64));
             OnLoad?.Invoke(levelLoadData);
+            
+            //The tilemap collider takes a while to load unless we call this function
+            GetComponent<TilemapCollider2D>().ProcessTilemapChanges();
+            //Using the newly updated tilemap collider we can call the scan function to create a new grid
+            //for enemies to pathfind on
+            AstarPath.active.Scan();
         }
 
         public LevelLoadData GetLastLoadData()

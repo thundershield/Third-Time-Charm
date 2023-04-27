@@ -223,6 +223,9 @@ namespace Enemies
             animator.Play("Death");
             EnemyCollider.enabled = false;
             yield return new WaitForSeconds(deathTime);
+            var itemPrefab = GameObject.Find("Inventory").GetComponent<inventoryMenu>().itemPrefab;
+            GameObject item =  Instantiate(itemPrefab, transform.position, Quaternion.identity);
+            item.GetComponent<itemObject>().updateItem(Random.Range(1,6));
             Destroy(gameObject);
         }
         //Moves towards a given waypoint on a path and returns whatever waypoint you are now on

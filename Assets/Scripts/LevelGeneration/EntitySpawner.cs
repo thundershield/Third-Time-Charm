@@ -7,6 +7,7 @@ namespace LevelGeneration
     {
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject[] enemyPrefabs;
+        [SerializeField] private GameObject bossPrefab;
         private Map _map;
     
         private void Start()
@@ -25,6 +26,9 @@ namespace LevelGeneration
                 // This is necessary to make sure that the level is reproducible based on a seed.
                 var enemy = enemyPrefabs[enemyPosition.SpawnData % enemyPrefabs.Length];
                 _map.SpawnObject(enemy, enemyPosition.Position);
+            }
+            if(levelLoadData.BossPosition!=null){
+                _map.SpawnObject(bossPrefab, levelLoadData.BossPosition.GetValueOrDefault());
             }
         }
     }

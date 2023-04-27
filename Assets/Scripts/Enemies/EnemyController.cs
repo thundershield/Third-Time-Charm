@@ -84,7 +84,7 @@ namespace Enemies
             }
         }
 
-        protected void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             if (!target) return;
             
@@ -247,7 +247,7 @@ namespace Enemies
             }
         }
         //Called from other objects to do damage to the enemy. Applies damage and knockback
-        public void TakeDamage(int damage, DamageType type, GameObject source)
+        public virtual void TakeDamage(int damage, DamageType type, GameObject source)
         {
             if(state != BehaviorState.dead){
                 curHealth = curHealth - damage;

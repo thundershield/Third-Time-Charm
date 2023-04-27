@@ -5792,7 +5792,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 155, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 300, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1723415806
@@ -6869,6 +6869,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3224470926865221661, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+      propertyPath: bossPrefab
+      value: 
+      objectReference: {fileID: 4066378823516231430, guid: 817d6bcd5224dbc4b891a7841d0b6bff, type: 3}
+    - target: {fileID: 3224470926865221661, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
       propertyPath: enemyPrefabs.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -6880,6 +6884,10 @@ PrefabInstance:
       propertyPath: enemyPrefabs.Array.data[2]
       value: 
       objectReference: {fileID: 4066378823516231430, guid: 455245a82ae142e4f9c56eb0e1297ffa, type: 3}
+    - target: {fileID: 3224470926865221661, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
+      propertyPath: enemyPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 4066378823516231430, guid: 817d6bcd5224dbc4b891a7841d0b6bff, type: 3}
     - target: {fileID: 8148352421484530173, guid: 95ab43414928d834d8c8b24336c580a4, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3623703804

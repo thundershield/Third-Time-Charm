@@ -359,7 +359,7 @@ MonoBehaviour:
   windupTime: 0.25
   attackTime: 1
   attackCooldown: 2
-  deathTime: 2
+  deathTime: 1.625
   curHealth: 0
   hitBox: {fileID: 4513113152682953462}
   state: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
 using TMPro;
@@ -233,6 +234,9 @@ using TMPro;
             }
             if(Input.GetKeyDown(KeyCode.Q) && !isOpen) {
                 rotateInventory();
+            }
+            if(Input.GetKeyDown(KeyCode.P)) {
+                SceneManager.LoadScene(0);
             }
             if(Input.GetKeyDown(KeyCode.V)) {
                 dropItem();

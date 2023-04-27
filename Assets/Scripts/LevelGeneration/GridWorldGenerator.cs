@@ -102,7 +102,7 @@ namespace LevelGeneration
             return Rooms[x + y * MapSize];
         }
         
-        private void AddRoomEnemyPosition(Random random, Map map, int roomX, int roomY, LevelLoadData loadData)
+        private void AddRoomEnemyPosition(Random random, Map map, int roomX, int roomY, ref LevelLoadData loadData)
         {
             if (random.Next(RoomsPerEnemySpawn) != 0) return;
 
@@ -160,7 +160,7 @@ namespace LevelGeneration
             return roomTemplates;
         }
 
-        private void GenerateRoomFromTemplate(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories, RoomTemplate roomTemplate, LevelLoadData loadData)
+        private void GenerateRoomFromTemplate(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories, RoomTemplate roomTemplate, ref LevelLoadData loadData)
         {
             var roomX = roomTemplate.Position.x * RoomOverlappingWidth;
             var roomY = roomTemplate.Position.y * RoomOverlappingHeight;
@@ -206,7 +206,7 @@ namespace LevelGeneration
                 return;
             }
             
-            AddRoomEnemyPosition(random, map, roomTemplate.Position.x, roomTemplate.Position.y, loadData);
+            AddRoomEnemyPosition(random, map, roomTemplate.Position.x, roomTemplate.Position.y, ref loadData);
         }
 
         private LevelLoadData GenerateRooms(Random random, Map map, Dictionary<TileCategory, Tile[]> tileCategories)
@@ -219,12 +219,12 @@ namespace LevelGeneration
 
             foreach (var roomTemplate in roomTemplates[RoomCategory.Outdoor])
             {
-                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, loadData);
+                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, ref loadData);
             }
             
             foreach (var roomTemplate in roomTemplates[RoomCategory.Indoor])
             {
-                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, loadData);
+                GenerateRoomFromTemplate(random, map, tileCategories, roomTemplate, ref loadData);
             }
 
             return loadData;
